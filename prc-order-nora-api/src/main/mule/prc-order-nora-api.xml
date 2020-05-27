@@ -1,0 +1,1244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:module-logger="http://www.mulesoft.org/schema/mule/module-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/module-logger http://www.mulesoft.org/schema/mule/module-logger/current/mule-module-logger.xsd
+http://www.mulesoft.org/schema/mule/ibm-mq http://www.mulesoft.org/schema/mule/ibm-mq/current/mule-ibm-mq.xsd
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:request-config name="HTTP_Request_sysSFCC" doc:name="HTTP Request configuration" doc:id="9900b5d2-71d5-4568-91c8-c1579b9ccc9a" basePath="/api">
+		<http:request-connection host="${ws.sfccsapi.host}" port="${ws.sfccsapi.port}"/>
+		<http:default-headers >
+			<http:default-header key="Content-Type" value="application/json" />
+		</http:default-headers>
+	</http:request-config>
+	<configuration doc:name="Configuration" doc:id="832f831f-5cc7-46a4-95d1-75860cd2f45e" defaultErrorHandler-ref="globalError_Handler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="bedeff34-cb00-40e5-bf29-d12204927d36" file="config/api-${env}-config.yaml" />
+	
+	<xml-module:config name="XML_Config" doc:name="XML Config" doc:id="5f925058-817f-49f3-bdf5-2aed64a6915f" >
+	</xml-module:config>
+	<http:request-config name="HTTP_Request_config_syswmb" doc:name="HTTP Request configuration" doc:id="441f2c19-797d-4224-917f-662e45fdff8b" basePath="/api">
+		<http:request-connection host="${ws.syswmb.host}" port="${ws.syswmb.port}" />
+	</http:request-config>
+	<os:config name="ObjectStore_Orders_Config" doc:name="ObjectStore Config" doc:id="187a3635-57a9-43aa-9717-4f18bb1486d6" >
+		<os:connection />
+	</os:config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="91808fc2-bb41-4740-9c19-a0aa4c6c993c" entryTtl="5" entryTtlUnit="DAYS" expirationIntervalUnit="DAYS" config-ref="ObjectStore_Orders_Config" maxEntries="1000"/>
+	<flow name="prc-order-apiFlow" doc:id="ad834979-8f61-4e04-98a8-869907f125f9">
+		<scatter-gather doc:name="Scatter-Gather" doc:id="9415101e-6c02-46c7-9cad-7f1efd8bda5d" maxConcurrency="4">
+			<route>
+				<ee:transform doc:name="Set_Params" doc:id="c8cbb957-cd5e-461b-b3bf-766292cfcc0c">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if(vars.envVar == "NORA" and vars.shipmentType == "standard")
+		{
+  "count": 50,
+  "start": 0,
+  "query" : 
+  {
+   "bool_query": 
+   	{
+       "should":[
+       {
+            "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                     { "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                      { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is_null" } },
+                      { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                      { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.remorseTime } }
+            }
+         },
+       
+        {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is_null"} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         },
+         
+         {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is", "values": ["FAILED"]} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         }
+                                                               
+         ]
+      }
+       
+   }
+ 
+}
+
+ 
+
+else
+{
+  "count": 30,
+  "start": 0,
+  "query" : 
+  {
+   "bool_query": 
+   	{
+       "should":[
+       {
+            "bool_query": 
+            {
+            	"must": [
+                      { "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                      { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is_null" } },
+                      { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                      { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                  ]
+            }
+         },
+       
+        {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is_null"} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         },
+         
+         {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is", "values": ["FAILED"]} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         }
+                                                               
+         ]
+      }
+       
+   }
+ 
+}
+
+
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="siteVar"><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+
+params:
+
+{
+	"site": "Lee"
+}
+
+]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="cd04075f-ed0e-4fce-8bd2-31ade583dbdb" message="before call SFCC  #[vars.siteVar.params.site]---#[payload]" />
+				<http:request method="GET" doc:name="Get-SFCC-Lee-Orders" doc:id="5e319ca5-63cb-497e-9c65-68241ec75d96" config-ref="HTTP_Request_sysSFCC" path="/orders" sendBodyMode="ALWAYS" responseTimeout="300000">
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	env : vars.envVar
+}]]]></http:query-params>
+				</http:request>
+				<logger level="DEBUG" doc:name="Logger" doc:id="84079958-0c3f-4910-9a0b-364a92e840e3" message="##Order colection## #[vars.siteVar.params.site] "/>
+				<choice doc:name="Choice" doc:id="2d5ede82-5512-4d51-aae6-538856237577" >
+					<when expression="#[payload.Order != null]">
+						<foreach doc:name="For Each" doc:id="bc149b1f-cad9-4986-a463-62048178e56e" collection="#[payload.Order]" counterVariableName="c">
+					<flow-ref doc:name="ProcessEachOrder" doc:id="daed8004-41bf-4910-bfc1-923e634034a8" name="order-iteration-flow" targetValue="#[payload]" />
+				</foreach>
+					</when>
+					<otherwise >
+						<logger level="INFO" doc:name="Logger" doc:id="49bf1ea1-8a8a-452d-adc7-2f8e105a6ab8" message="No Order Exists for Lee  #[vars.envVar] "/>
+					</otherwise>
+				</choice>
+			</route>
+			<route>
+				<ee:transform doc:name="Set_Params" doc:id="43f540f4-6028-490e-b20a-ff893d47efd0">
+			<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if(vars.envVar == "NORA" and vars.shipmentType == "standard")
+		{
+  "count": 50,
+  "start": 0,
+  "query" : 
+  {
+   "bool_query": 
+   	{
+       "should":[
+       {
+            "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                     { "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                      { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is_null" } },
+                      { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                      { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.remorseTime } }
+            }
+         },
+       
+        {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is_null"} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         },
+         
+         {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is", "values": ["FAILED"]} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "one_of", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         }
+                                                               
+         ]
+      }
+       
+   }
+ 
+}
+
+ 
+
+else
+{
+  "count": 30,
+  "start": 0,
+  "query" : 
+  {
+   "bool_query": 
+   	{
+       "should":[
+       {
+            "bool_query": 
+            {
+            	"must": [
+                      { "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                      { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is_null" } },
+                      { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                      { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                  ]
+            }
+         },
+       
+        {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is_null"} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         },
+         
+         {
+           "filtered_query": 
+           {
+           	  "query" : 
+           	  {
+                 "bool_query": 
+                 {
+                   "must": [
+                    	{ "term_query": { "fields": [ "export_status" ], "operator": "is", "values": ["ready"] } },
+                        { "term_query": { "fields": [ "c_exportedToMulesoft" ], "operator": "is", "values": ["InProcess"]} } ,
+                        { "term_query": { "fields": [ "c_orderFailedStatus" ], "operator": "is", "values": ["FAILED"]} } ,
+                        { "term_query": { "fields": [ "status" ], "operator": "one_of", "values": ["new","open"] } },
+                        { "term_query": { "fields": [ "shipments.shipping_method_id" ], "operator": "not_in", "values": ["standard","military","pobox","pobox-ak-hi"] } }
+                    ]
+                 }
+               },	
+               "filter":  { "range_filter": { "field": "creation_date" , "to": vars.reprocessTime } }
+            }
+         }
+                                                               
+         ]
+      }
+       
+   }
+ 
+}
+
+
+]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="siteVar"><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+
+params:
+
+{
+	"site": "Wrangler"
+}
+
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="7b15b62c-d235-4833-be39-12d2326ded62" message="before call SFCC-2  #[vars.siteVar.params.site]---#[payload]" />
+				<http:request method="GET" doc:name="Get-SFCC-Wrangler-Orders" doc:id="23f174f4-ddb6-4ac0-9e15-c27ff2b5e77a" config-ref="HTTP_Request_sysSFCC" path="/orders" sendBodyMode="ALWAYS" responseTimeout="300000">
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	env : vars.envVar
+}]]]></http:query-params>
+				</http:request>
+				<logger level="INFO" doc:name="Logger" doc:id="3c101e43-31a7-4acb-86e6-5682661ea30d" message="##Order colection## #[vars.siteVar.params.site]"/>
+				<choice doc:name="Choice" doc:id="912c59cf-9921-4a33-b66b-5734113d5f05" >
+					<when expression="#[payload.Order != null]">
+						<foreach doc:name="For Each" doc:id="c655a489-6d68-4b46-bfe9-d3a8284a757f" collection="#[payload.Order]" counterVariableName="c">
+					<flow-ref doc:name="ProcessEachOrder" doc:id="f1a05f8d-c85b-49e1-a01a-eacd7df21e36" name="order-iteration-flow" targetValue="#[payload]" />
+				</foreach>
+					</when>
+					<otherwise >
+						<logger level="INFO" doc:name="Logger" doc:id="f6f5ad59-c082-431c-8465-4d844683a429" message="No Order Exists for Wrangler  #[vars.envVar] "/>
+					</otherwise>
+				</choice>
+			
+</route>
+		</scatter-gather>
+	</flow>
+	<flow name="order-iteration-flow" doc:id="90f135de-56c3-4844-b633-1baaec93ce43" >
+		<set-variable value="#[payload.customerOrderID]" doc:name="setOrderID" doc:id="0ee54c00-b4b8-482e-8e88-95872af3f764" variableName="orderID" />
+		<choice doc:name="Choice" doc:id="e2a994f4-c7ee-43d8-899b-cd57cd9f0a54">
+				<when expression="#['US' == 'US']" doc:id="bec3b2f6-ba08-4498-9a01-dafabaa73deb">
+				<choice doc:name="Choice" doc:id="a19bfc1f-2a59-4e68-9e20-5df8b8a8ac24">
+					<when doc:id="f17e96e0-0731-4cdb-a1e8-7c53bba0ee90" expression="#[%dw 2.0
+output application/json
+---
+sizeOf(payload.orderLine) &lt; 2]">
+						<logger level="INFO" doc:name="Logger" doc:id="90af0c79-5c55-462c-a0df-4c34ba63b22e" message="##Processing order --## #[vars.orderID] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+						<set-variable value='#[%dw 2.0
+output application/java
+---
+
+payload.customerOrderID ++ "-1"]' doc:name="SetPONumber" doc:id="1ec4af4a-aaee-42de-86eb-a869549b0e63" variableName="PONumber"/>
+						<ee:transform doc:name="Transform Message" doc:id="07794fd2-408a-41a2-b52e-ec97f5925bb2">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/xml skipNullOn = "everywhere",inlineCloseOn="empty"
+ns NS1 http://www.vfc.com/esb/OnlineOrder/1
+---
+{
+	NS1#processOnlineOrder: {
+		NS1#applicationArea: {
+			NS1#creationDateTime: payload.creationDateTime,
+			NS1#service: "OnlineOrder",
+			NS1#operation: "process",
+			NS1#version: 1.0,			   	
+			NS1#sender: {
+			NS1#applicationID: "SFCC",
+			NS1#subApplicationID: payload.brandID,
+			NS1#businessID: payload.brandID ++ ":" ++ payload.country_Code ++  ":EC:" ++ payload.customerOrderID ++ "-1",
+			NS1#coalitionID : "JW",
+			NS1#brandID: payload.brandID,
+			NS1#countryCode: payload.country_Code,
+			NS1#channelID: "EC",
+			NS1#routeKeys: {
+				NS1#routeKey: "NULL"
+				             }
+				
+				       }
+		   
+		},
+		NS1#dataArea: {
+			NS1#onlineOrder: {
+				NS1#orderHeader: {
+					NS1#actionCriteria: {
+						NS1#actionExpression: "submitOrder",
+						NS1#changeStatus: {
+							NS1#toStatus: "CREATED",
+							NS1#changeDateTime: payload.creationDateTime
+						}
+					},
+					NS1#stockDYOCode: "STOCK",
+					NS1#applicationOrderID: payload.customerOrderID ++ "-1",
+					NS1#alternateOrderID: payload.customerOrderID ++ "-1",
+					NS1#customerOrderID: payload.customerOrderID ++ "-1",
+					NS1#enterpriseOrderID : payload.brandID ++ ":EC:" ++ payload.customerOrderID ++ "-1",
+					NS1#giftOrderInd: payload.giftOrderInd,
+					NS1#customerID: {
+						NS1#soldTo: if(payload.brandID == 'LE') "77777" else "61111"
+					},
+					NS1#currencyCode: payload.currencyCode,
+					NS1#paymentInfo: {
+						NS1#payMethodCode: upper(payload.paymentInfo.payMethodCode),
+						NS1#payMethodType: payload.paymentInfo.payMethodType,
+						NS1#accountSuffix: payload.paymentInfo.accountSuffix,
+						NS1#authorizationAmount: (payload.Orderamount as String{format:"00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#authorizationCode: if(payload.paymentInfo.authorizationCode != null)  payload.paymentInfo.authorizationCode else 0.0, 
+						NS1#billingContact: {
+							NS1#id: if(payload.paymentInfo.billingContact.Contactid  != null) payload.paymentInfo.billingContact.Contactid else {},
+							NS1#name: {
+								NS1#givenName: payload.paymentInfo.billingContact.givenName,
+								NS1#familyName: payload.paymentInfo.billingContact.familyName
+							},
+							NS1#phoneNumber: {
+								NS1#dialNumber: payload.paymentInfo.billingContact.phone
+							},
+							NS1#emailAddressCommunication: {
+								NS1#emailAddressID: payload.paymentInfo.billingContact.email
+							},
+							NS1#address: {
+								NS1#addressLine: payload.paymentInfo.billingContact.address.addressLine1,
+								NS1#addressLine: if(payload.paymentInfo.billingContact.address.addressLine2 != null) payload.paymentInfo.billingContact.address.addressLine2 else {},
+								NS1#cityName: payload.paymentInfo.billingContact.address.cityName,
+								NS1#stateProvinceCode: payload.paymentInfo.billingContact.address.stateProvinceCode,
+								NS1#countryCode: payload.country_Code,
+								NS1#postalCode: payload.paymentInfo.billingContact.address.postalCode
+							}
+						},
+						NS1#payMethodName: upper(payload.paymentInfo.payMethodName),
+						NS1#paymentProvider: {}
+					},
+					NS1#gift: {},
+					NS1#inventoryChannel : "EC",
+					NS1#createDateTime: payload.creationDateTime,
+					NS1#orderTotal: {
+						NS1#amount: (payload.Orderamount as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#discountAmount:  ( (payload.orderLine.discountAmount reduce ($$ + $)) as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount: (payload.OrderTax as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#orderShippingTotal: {
+						NS1#amount: if(payload.shipping_adress.Shipmentamount != null) (payload.shipping_adress.Shipmentamount as String {format: "00000000000000.0000000000"})[0 to 16] as Number else (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount: if(payload.shipping_adress.ShipmemntsalesTaxAmount != null) payload.shipping_adress.ShipmemntsalesTaxAmount as String {format: "00000000000000.0000000000"} as Number else (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#orderItemTotal: {
+						NS1#amount :   ((payload.orderLine.sellingAmount reduce ($$ + $)) as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#discountAmount: ( (payload.orderLine.discountAmount reduce ($$ + $)) as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#orderLanguageCode: {},
+					
+					NS1#adjustments: {
+						NS1#adjustment: {
+							NS1#code: {},
+							NS1#amount @(currencyCode:payload.currencyCode): (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+							NS1#"type": {},
+							NS1#description: {}
+						}
+					},
+					NS1#registeredConsumerInd : "FALSE"
+				},
+				NS1#orderLine: payload.orderLine map ((items,i) -> {
+					NS1#dyoInd: "N",
+					NS1#lineID: items.partNumber[i],
+					NS1#enterpriseItemID: "N/A",
+					NS1#upcID: items.upcID,
+					NS1#unitPrice: {
+						NS1#sellingAmount: (items.sellingAmount as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#retailAmount: (items.unitpriceBefProm as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#unitPriceBreak: {
+						NS1#discountAmount: ((items.discountAmount / items.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number 
+					},
+					NS1#taxInfo: {
+						NS1#amount: ((items.salesTaxAmount / items.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#districtTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#countyTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#stateTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#cityTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						}
+					},
+					NS1#requestedQuantity: items.requestedQuantity,
+					NS1#facilityID: {},
+					NS1#shipping: {
+						NS1#amount: if(payload.shipping_adress.Shipmentamount != null) ((payload.shipping_adress.Shipmentamount / items.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number else (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount: if(payload.shipping_adress.ShipmemntsalesTaxAmount != null) ((payload.shipping_adress.ShipmemntsalesTaxAmount / items.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number else (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#shippingMode: {
+						NS1#carrierID: {},
+						NS1#serviceLevelCode: items.shippingMode.serviceLevelCode,
+						NS1#serviceLevelName: items.shippingMode.carrierServiceLevelName
+					},
+					NS1#shippingContact: {
+						NS1#name: {
+							NS1#givenName: items.shippingContact.name.givenName,
+							NS1#familyName: items.shippingContact.name.familyName,
+							NS1#nickName: {}
+						},
+						NS1#phoneNumber: {
+							NS1#dialNumber: items.shippingContact.phoneNumber1
+						},
+						NS1#phoneNumber:
+						{
+							NS1#dialNumber: {}
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: items.shippingContact.emailAddressCommunication
+						},
+						NS1#address: {
+							NS1#addressLine: items.shippingContact.address.addressLine1,
+							NS1#cityName: items.shippingContact.address.cityName,
+							NS1#stateProvinceCode: items.shippingContact.address.stateProvinceCode,
+							NS1#countryCode: items.shippingContact.address.countryCode,
+							NS1#postalCode: items.shippingContact.address.postalCode
+						}
+					},
+					NS1#gift: {
+					NS1#message: {},
+				    NS1#fromContact: 
+				    {
+				    	NS1#name: {
+							NS1#givenName: {},
+							NS1#familyName: {},
+						},
+						NS1#communication: 
+						{
+						NS1#address: {
+						
+							NS1#cityName: items.shippingContact.address.cityName,						
+						}						
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: {}
+						}
+				    },
+				     NS1#toContact: 
+				    {
+				    	NS1#name: {
+							NS1#givenName: {},
+							NS1#familyName: {},
+						},
+						NS1#communication: 
+						{
+						NS1#address: {
+						
+							NS1#cityName: items.shippingContact.address.cityName,						
+						}						
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: {}
+						}
+				    }
+				    },				    
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#sourceSystemItemDescription: items.productName,
+					NS1#sourceSystemItemColorDescription: {},
+					NS1#sourceSystemItemSizeDescription: {},
+					NS1#pickupCollectionPoint: {},
+					NS1#itemCatalogID : {}
+					
+				})
+			}
+		}
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+						<logger level="INFO" doc:name="TestLogger" doc:id="0debad9e-e50b-40f9-bf54-f9931ba8d24d" message="##VF-XML## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+						<os:retrieve doc:name="Retrieve" doc:id="086a72b0-2a74-4c32-9044-86281fa14fc1" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]' objectStore="Object_store" target="OrderList_obj">
+							<os:default-value ><![CDATA[#['NULL']]]></os:default-value>
+						</os:retrieve>
+						<logger level="INFO" doc:name="Logger" doc:id="4349e0cf-5c92-4768-9f39-242be1da4cad" message="##RetrieveObj## #[vars.PONumber]  #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+						<choice doc:name="Choice" doc:id="eb9b9f2b-6165-4b08-9a93-e70d3b430f48">
+							<when expression="#[vars.OrderList_obj == 'NULL']">
+								<xml-module:validate-schema doc:name="Validate schema" doc:id="a75cf7a6-7a04-4a6f-aa1a-e9280fbb2894" config-ref="XML_Config" schemas="OnlineOrder.xsd" />
+								<http:request method="POST" doc:name="SysWMBInvoke" doc:id="ab698fd5-909a-41e5-b99b-3b0545911020" config-ref="HTTP_Request_config_syswmb" path="/publish" responseTimeout="20000">
+							<http:query-params><![CDATA[#[output application/java
+---
+{
+	queuename : "KBB2P.MULE.WMB"
+}]]]></http:query-params>
+									
+						</http:request>
+								<os:store doc:name="Store" doc:id="3fa31655-3472-4a49-9d7f-b9ce525393af" objectStore="Object_store" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]'>
+									<os:value ><![CDATA[#[[vars.PONumber]]]]></os:value>
+								</os:store>
+								<logger level="INFO" doc:name="Logger" doc:id="3d797b09-50a1-4504-ac71-4d4ea0757ee1" message="##Order Sent to WMBQ-NoObjctStoreExists## #[vars.PONumber]  #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+							</when>
+							<otherwise >
+								<ee:transform doc:name="Transform Message" doc:id="654febe8-22dd-4f95-b784-97c07efdf817" >
+									<ee:message >
+									</ee:message>
+									<ee:variables >
+										<ee:set-variable variableName="OrderExistCheck" ><![CDATA[%dw 2.0
+output application/json
+---
+vars.OrderList_obj contains(vars.PONumber)]]></ee:set-variable>
+									</ee:variables>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="6f2133e8-b7f1-404b-b38b-d39d60cf857e" message="##OrderCheckBoolean## #[vars.OrderExistCheck] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+								<choice doc:name="Choice" doc:id="b3d7ebed-ccf8-49e5-a4e7-e18149e3c75d" >
+									<when expression="#[vars.OrderExistCheck]">
+										<logger level="INFO" doc:name="SkipIterateLogger" doc:id="924d8d86-21bf-4561-aae3-98af6352124f" message="##SkipIteration## #[vars.PONumber]  #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+									</when>
+									<otherwise >
+										<xml-module:validate-schema doc:name="Validate schema" doc:id="d293edfc-a369-47aa-b3c9-7210660406cf" config-ref="XML_Config" schemas="OnlineOrder.xsd" />
+										<http:request method="POST" doc:name="SysWMBInvoke" doc:id="02b1c87e-840b-4004-9085-adff3012d5ec" config-ref="HTTP_Request_config_syswmb" path="/publish" responseTimeout="20000">
+											<http:query-params><![CDATA[#[output application/java
+---
+{
+	queuename : "KBB2P.MULE.WMB"
+}]]]></http:query-params>
+										</http:request>
+										<os:store doc:name="Store" doc:id="07ae4573-6f65-4d8e-b7f1-9cff9cccbdb0" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]'>
+											<os:value><![CDATA[#[%dw 2.0
+output application/java
+---
+
+flatten(vars.*OrderList_obj) ++ [vars.PONumber]]]]></os:value>
+										</os:store>
+										<logger level="INFO" doc:name="Logger" doc:id="79a6352f-5a91-443e-971b-2afa4c9797ab" message="##Order Sent to WMBQ ObjectStoreExistsNoValue## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+									</otherwise>
+								</choice>
+							</otherwise>
+						</choice>
+						<http:request method="PUT" doc:name="OrderStatusUpdate" doc:id="232dd638-3acc-4e07-a9a3-c16b1c746eb4" config-ref="HTTP_Request_sysSFCC" path="/{order_id}" responseTimeout="20000">
+							<http:body><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"c_exportedToMulesoft" : "exported",
+	"c_orderFailedStatus"  : "Success"
+	
+}]]]></http:body>
+					<http:uri-params><![CDATA[#[output application/java
+---
+{
+	order_id : vars.orderID
+}]]]></http:uri-params>
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	env : vars.envVar
+}]]]></http:query-params>
+								
+						</http:request>
+						<logger level="INFO" doc:name="Logger" doc:id="dd7cfab7-78ae-4f2e-8357-c3997acb682a" message="##Updated SuccessStatus to SFCC## #[vars.orderID] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+					</when>
+					<otherwise>
+						<set-variable value="#[payload]" doc:name="payloadVariable" doc:id="e08136a1-e707-46b6-a692-11f12af6cf8c" variableName="varPayload" />
+						<logger level="INFO" doc:name="Logger" doc:id="4a0193be-51cc-4598-8d83-da0a4d9f0435" message="##Processing order --## #[vars.orderID] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+						<ee:transform doc:name="ItemTotQuantiry" doc:id="4e0b8586-a64e-4d42-b4ba-53c6f8fed99a">
+							<ee:message>
+							</ee:message>
+							<ee:variables >
+								<ee:set-variable variableName="itemTotQty" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.orderLine.requestedQuantity reduce ($$ + $)]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+						<ee:transform doc:name="shipmentAmounts" doc:id="e03fde91-5d4e-4328-ac67-0c0f96114a25">
+							<ee:message>
+							</ee:message>
+							<ee:variables >
+								<ee:set-variable variableName="shippingAmounts" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	unitShipamount: if(vars.varPayload.shipping_adress.Shipmentamount != null) (vars.varPayload.shipping_adress.Shipmentamount / vars.itemTotQty) else 0.0 ,
+	UnitsalesTaxAmount: if(vars.varPayload.shipping_adress.ShipmemntsalesTaxAmount != null) (vars.varPayload.shipping_adress.ShipmemntsalesTaxAmount / vars.itemTotQty) else 0.0
+}]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+						<logger level="INFO" doc:name="Logger" doc:id="dee3f72f-21a0-4e24-aec2-6ed6209f194e" message="##ItemTotQuantity  #[vars.itemTotQty] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+						<ee:transform doc:name="Transform Message" doc:id="4da1e11f-5fc3-4be0-a7fb-b83bf933c39f">
+							<ee:message>
+							</ee:message>
+							<ee:variables>
+								<ee:set-variable variableName="pcItems"><![CDATA[%dw 2.0
+output application/json 
+--- 
+
+ 
+
+lineItems: payload.orderLine groupBy $.profitCenter mapObject ((group, profitCenter)->
+    {
+        group:
+        {
+        name: profitCenter,
+        itemTotal: sum(group.sellingAmount),
+        totalQty: sum(group.requestedQuantity),
+        discountTotal: sum(group.discountAmount),
+        itemTaxTotal: sum(group.salesTaxAmount),
+        shipTotal: (vars.shippingAmounts.unitShipamount * sum(group.requestedQuantity)),
+        shipTaxTot: (vars.shippingAmounts.UnitsalesTaxAmount * sum(group.requestedQuantity)),
+        itemTotalAfterProm: sum(group.retailAmount),
+        
+        items:
+        {
+            (group map {
+                item : $,
+            })
+        }
+        
+        }
+    }
+)]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+						<try doc:name="Try" doc:id="7dac0981-d8bc-48f2-ab36-b8c2fc35adee" >
+							<foreach doc:name="For Each" doc:id="19b7a677-b23f-46d5-a76b-12dcd116a95c" collection="#[vars.pcItems.lineItems.*group]" counterVariableName="i">
+							<set-variable value='#[%dw 2.0
+output application/java
+---
+
+vars.varPayload.customerOrderID ++ "-" ++ vars.i]' doc:name="SetPONumber" doc:id="2c979dc4-8fbe-4873-bbf2-5dd626490f16" variableName="PONumber" />
+								<logger level="INFO" doc:name="Logger" doc:id="07fcd98a-899f-4f7a-b2ff-35a4537fdd48" message="##insideloop## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+								<ee:transform doc:name="Transform Message" doc:id="268a53e1-29dc-45d9-9c2c-23eccbf0801d">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn = "everywhere"
+ns NS1 http://www.vfc.com/esb/OnlineOrder/1
+---
+{
+	NS1#processOnlineOrder: {
+		NS1#applicationArea: {
+			NS1#creationDateTime: vars.varPayload.creationDateTime,
+			NS1#service: "OnlineOrder",
+			NS1#operation: "process",
+			NS1#version: 1.0,
+			NS1#sender: {
+				NS1#applicationID: "SFCC",
+				NS1#subApplicationID: vars.varPayload.brandID,
+				NS1#businessID: vars.varPayload.brandID ++ ":" ++ vars.varPayload.country_Code ++  ":EC:" ++ vars.varPayload.customerOrderID ++ "-" ++ vars.i as String,
+				NS1#coalitionID : "JW",
+				NS1#brandID: vars.varPayload.brandID,
+				NS1#countryCode: vars.varPayload.country_Code,
+				NS1#channelID: "EC",
+				NS1#routeKeys: {
+					NS1#routeKey: "NULL"
+				             }
+			           }
+			
+		   },
+		NS1#dataArea: {
+			NS1#onlineOrder: {
+				NS1#orderHeader: {
+					NS1#actionCriteria: {
+						NS1#actionExpression: "submitOrder",
+						NS1#changeStatus: {
+							NS1#toStatus: "CREATED",
+							NS1#changeDateTime: vars.varPayload.creationDateTime
+						}
+					},
+					NS1#stockDYOCode: "STOCK",
+					NS1#applicationOrderID: vars.varPayload.customerOrderID ++ "-" ++ vars.i as String,
+					NS1#alternateOrderID: vars.varPayload.customerOrderID ++ "-" ++ vars.i as String,
+					NS1#customerOrderID: vars.varPayload.customerOrderID ++ "-" ++ vars.i as String,
+					NS1#enterpriseOrderID : vars.varPayload.brandID ++ ":EC:" ++ vars.varPayload.customerOrderID ++ "-" ++ vars.i as String,
+					NS1#giftOrderInd: vars.varPayload.giftOrderInd,
+					NS1#customerID: {
+						NS1#soldTo: if(vars.varPayload.brandID == 'LE') "77777" else "61111"
+					},
+					NS1#currencyCode: vars.varPayload.currencyCode,
+					NS1#paymentInfo: {
+						NS1#payMethodCode: upper(vars.varPayload.paymentInfo.payMethodCode),
+						NS1#payMethodType: upper(vars.varPayload.paymentInfo.payMethodType),
+						NS1#accountSuffix: vars.varPayload.paymentInfo.accountSuffix,
+						NS1#authorizationAmount: (vars.varPayload.Orderamount as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#authorizationCode: if(vars.varPayload.paymentInfo.authorizationCode != null)  vars.varPayload.paymentInfo.authorizationCode else 0.0 ,
+						NS1#billingContact: {
+							NS1#id: if(vars.varPayload.paymentInfo.billingContact.Contactid  != null) vars.varPayload.paymentInfo.billingContact.Contactid else {},
+							NS1#name: {
+								NS1#givenName: vars.varPayload.paymentInfo.billingContact.givenName,
+								NS1#familyName: vars.varPayload.paymentInfo.billingContact.familyName
+							},
+							NS1#phoneNumber: {
+								NS1#dialNumber: vars.varPayload.paymentInfo.billingContact.phone
+							},
+							NS1#emailAddressCommunication: {
+								NS1#emailAddressID: vars.varPayload.paymentInfo.billingContact.email
+							},
+							NS1#address: {
+								NS1#addressLine: vars.varPayload.paymentInfo.billingContact.address.addressLine1,
+								NS1#addressLine: if(vars.varPayload.paymentInfo.billingContact.address.addressLine2 != null) vars.varPayload.paymentInfo.billingContact.address.addressLine2 else {},
+								NS1#cityName: vars.varPayload.paymentInfo.billingContact.address.cityName,
+								NS1#stateProvinceCode: vars.varPayload.paymentInfo.billingContact.address.stateProvinceCode,
+								NS1#countryCode: vars.varPayload.country_Code,
+								NS1#postalCode: vars.varPayload.paymentInfo.billingContact.address.postalCode
+							}
+						},
+						NS1#payMethodName: upper(vars.varPayload.paymentInfo.payMethodName),
+						NS1#paymentProvider: {}
+					},
+					NS1#gift: {},
+					NS1#inventoryChannel : "EC",
+					NS1#createDateTime: vars.varPayload.creationDateTime,
+					NS1#orderTotal: {
+						NS1#amount: ((payload.itemTotalAfterProm + payload.shipTotal + payload.shipTaxTot + payload.itemTaxTotal) as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#discountAmount: (payload.discountTotal as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount: (payload.itemTaxTotal as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#orderShippingTotal: {
+						NS1#amount: (payload.shipTotal as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount: (payload.shipTaxTot as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#orderItemTotal: {
+						NS1#amount : (payload.itemTotal as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#discountAmount: (payload.discountTotal as String {format: "00000000000000.0000000000"})[0 to 16] as Number 
+					},
+					NS1#orderLanguageCode: {},
+					
+					NS1#adjustments: {
+						NS1#adjustment: {
+							NS1#code: {},
+							NS1#amount @(currencyCode:payload.currencyCode): (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+							NS1#"type": {},
+							NS1#description: {}
+						}
+					},
+					NS1#registeredConsumerInd : "FALSE"
+				},
+				NS1#orderLine: payload.items.*item map ((lines,l) -> {
+					NS1#dyoInd: "N",
+					NS1#lineID: lines.partNumber,
+					NS1#enterpriseItemID: "N/A",
+					NS1#upcID: lines.upcID,
+					NS1#unitPrice: {
+						NS1#sellingAmount: (lines.sellingAmount as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#retailAmount: (lines.unitpriceBefProm as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#unitPriceBreak: {
+						NS1#discountAmount: ((lines.discountAmount / lines.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#taxInfo: {
+						NS1#amount: ((lines.salesTaxAmount / lines.requestedQuantity) as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#districtTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#countyTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#stateTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						},
+						NS1#cityTax: {
+							NS1#amount: (0.0 as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+						}
+					},
+					NS1#requestedQuantity: lines.requestedQuantity,
+					NS1#shipping: {
+						NS1#amount: (vars.shippingAmounts.unitShipamount as String {format: "00000000000000.0000000000"})[0 to 16] as Number,
+						NS1#salesTaxAmount:(vars.shippingAmounts.UnitsalesTaxAmount as String {format: "00000000000000.0000000000"})[0 to 16] as Number
+					},
+					NS1#shippingMode: {
+						NS1#carrierID: {},
+						NS1#serviceLevelCode: lines.shippingMode.serviceLevelCode,
+						NS1#serviceLevelName: lines.shippingMode.carrierServiceLevelName
+					},
+					NS1#shippingContact: {
+						NS1#name: {
+							NS1#givenName: lines.shippingContact.name.givenName,
+							NS1#familyName: lines.shippingContact.name.familyName,
+							NS1#nickName: {}
+						},
+						NS1#phoneNumber: {
+							NS1#dialNumber: lines.shippingContact.phoneNumber1
+						},
+						NS1#phoneNumber:
+						{
+							NS1#dialNumber: {}
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: lines.shippingContact.emailAddressCommunication
+						},
+						NS1#address: {
+							NS1#addressLine: lines.shippingContact.address.addressLine1,
+							NS1#cityName: lines.shippingContact.address.cityName,
+							NS1#stateProvinceCode: lines.shippingContact.address.stateProvinceCode,
+							NS1#countryCode: lines.shippingContact.address.countryCode,
+							NS1#postalCode: lines.shippingContact.address.postalCode
+						}
+					},
+					NS1#gift: {
+					NS1#message: {},
+				    NS1#fromContact: 
+				    {
+				    	NS1#name: {
+							NS1#givenName: {},
+							NS1#familyName: {},
+						},
+						NS1#communication: 
+						{
+						NS1#address: {
+						
+							NS1#cityName: lines.shippingContact.address.cityName,						
+						}						
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: {}
+						}
+				    },
+				     NS1#toContact: 
+				    {
+				    	NS1#name: {
+							NS1#givenName: {},
+							NS1#familyName: {},
+						},
+						NS1#communication: 
+						{
+						NS1#address: {
+						
+							NS1#cityName: lines.shippingContact.address.cityName,						
+						}						
+						},
+						NS1#emailAddressCommunication: {
+							NS1#emailAddressID: {}
+						}
+				    }
+				    },				    
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#vas: {
+						NS1#code: {},
+						NS1#description: {},
+						NS1#typeCode: {}
+					},
+					NS1#sourceSystemItemDescription: lines.productName,
+					NS1#sourceSystemItemColorDescription: {},
+					NS1#sourceSystemItemSizeDescription: {},
+					NS1#pickupCollectionPoint: {},
+					NS1#itemCatalogID : {}
+				})
+			}
+		}
+	}
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+							<logger level="INFO" doc:name="Logger" doc:id="7a41b8ae-43ac-46bf-ab6d-fbbebf1f0141" message="##VF-XML## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+								<os:retrieve doc:name="Retrieve" doc:id="c49642f8-67c9-4957-bb47-3db6df2e4277" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]' target="OrderList_obj">
+									<os:default-value ><![CDATA[#['NULL']]]></os:default-value>
+								</os:retrieve>
+								<logger level="INFO" doc:name="Logger" doc:id="403ad4b5-94dd-4c37-bc15-6bbba58a869d" message="##Multiline RertiveObjs## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+								<choice doc:name="Choice" doc:id="c23606bf-6ed1-43fd-b992-c5f0f4b3b0e5" >
+									<when expression="#[vars.OrderList_obj == 'NULL']">
+										<xml-module:validate-schema doc:name="Validate schema" doc:id="d5c48f8e-782c-42ed-a70b-c966652c3075" config-ref="XML_Config" schemas="OnlineOrder.xsd" />
+										<http:request method="POST" doc:name="SysWMBInvoke" doc:id="49056778-feec-46fe-b5aa-600d826b15b5" config-ref="HTTP_Request_config_syswmb" path="/publish" responseTimeout="20000">
+								<http:query-params><![CDATA[#[output application/java
+---
+{
+	queuename : "KBB2P.MULE.WMB"
+}]]]></http:query-params>
+										
+								</http:request>
+										<os:store doc:name="Store" doc:id="02561d3c-4dd4-4a5a-ac2e-e18646dd1448" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]' objectStore="Object_store">
+											<os:value ><![CDATA[#[[vars.PONumber]]]]></os:value>
+										</os:store>
+										<logger level="INFO" doc:name="Logger" doc:id="fc266a78-7bcb-43f6-b29f-cc8ce8ac7d4b" message="##Order Sent to WMBQMulti NoObjct## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+									</when>
+									<otherwise >
+										<ee:transform doc:name="Transform Message" doc:id="8d485d76-77fe-4013-8df3-19a6c3ec6e1c" >
+											<ee:message >
+											</ee:message>
+											<ee:variables >
+												<ee:set-variable variableName="OrderExistCheck" ><![CDATA[%dw 2.0
+output application/json
+---
+vars.OrderList_obj contains(vars.PONumber)]]></ee:set-variable>
+											</ee:variables>
+										</ee:transform>
+										<logger level="INFO" doc:name="Logger" doc:id="492cddff-2aaa-4dcd-993c-e57c3f88111b" message="##OrderExistCheckMultiline##  #[vars.OrderExistCheck] #[vars.siteVar.params.site]  #[vars.shipmentType]"/>
+										<choice doc:name="Choice" doc:id="b86622f1-4b23-4a26-a14b-bdd0bc464949" >
+											<when expression="#[vars.OrderExistCheck]">
+												<logger level="INFO" doc:name="SkipIterateLogger" doc:id="b7b9dd33-c02e-4065-9aa3-56bf1bee248f" message="##SkipIteration## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+											</when>
+											<otherwise >
+												<xml-module:validate-schema doc:name="Validate schema" doc:id="928145e1-2c97-4985-bd7e-8e8aafb8894d" config-ref="XML_Config" schemas="OnlineOrder.xsd" />
+												<http:request method="POST" doc:name="SysWMBInvoke" doc:id="8c77dc7e-0e2d-4bb3-8490-5a18c0a2ad3a" config-ref="HTTP_Request_config_syswmb" path="/publish" responseTimeout="20000" >
+													<http:query-params ><![CDATA[#[output application/java
+---
+{
+	queuename : "KBB2P.MULE.WMB"
+}]]]></http:query-params>
+												</http:request>
+												<os:store doc:name="Store" doc:id="fabfa567-3b75-4146-bab0-f473b11fc2b2" key='#[%dw 2.0
+output application/java
+---
+
+"Orders_" ++ vars.siteVar.params.site ++ vars.shipmentType]' objectStore="Object_store" >
+													<os:value ><![CDATA[#[%dw 2.0
+output application/java
+---
+
+flatten(vars.*OrderList_obj) ++ [vars.PONumber]]]]></os:value>
+												</os:store>
+												<logger level="INFO" doc:name="Logger" doc:id="4039088b-8b05-46cb-a70e-989b3ad8c365" message="##Order Sent to WMBQMulti ObjctStoreExistsNoValue## #[vars.PONumber] #[vars.siteVar.params.site]  #[vars.shipmentType]" />
+											</otherwise>
+										</choice>
+									</otherwise>
+								</choice>
+						</foreach>
+							<error-handler>
+								<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d4504620-6de0-4a38-872e-846e700a4d2b" >
+									<logger level="INFO" doc:name="Logger" doc:id="6ce8f361-8026-4abc-972f-cdf2e58e9188" message="## Failed to publish to WMB Queue for Order-- #[vars.orderID]"/>
+								</on-error-propagate>
+							</error-handler>
+						</try>
+						<http:request method="PUT" doc:name="OrderStatusUpdate" doc:id="cb90010f-ae36-4bfb-930e-a5a5bb5c3343" config-ref="HTTP_Request_sysSFCC" path="/{order_id}" responseTimeout="20000">
+								<http:body><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"c_exportedToMulesoft" : "exported",
+	"c_orderFailedStatus"  : "Success"
+	
+}]]]></http:body>
+							<http:uri-params><![CDATA[#[output application/java
+---
+{
+	order_id : vars.orderID
+}]]]></http:uri-params>
+							<http:query-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	env : vars.envVar
+}]]]></http:query-params>
+																					
+							
+							
+						</http:request>
+					</otherwise>
+				</choice> 
+				<!--   <logger level="INFO" doc:name="Logger" doc:id="b14bbe09-0a91-479d-aa12-7b6af7389424" message="String Payload  #[payload]" />  -->
+				 <!-- 	  <http:request method="POST" doc:name="Request WMB SAPI" doc:id="61b8e3b9-67ea-4846-abba-d5b78d02a79e" config-ref="HTTP_Request_sysWMB" path="/publish" /> -->
+				
+</when>
+						<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="6da51974-5615-48f2-bd70-0410284c9121" message="#OrderPAyload  #[payload] ##Default Branch Logger" />
+				
+</otherwise>
+			</choice>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="78bf64da-f9c0-4175-b960-ae888947a8aa" >
+				<logger level="INFO" doc:name="Logger" doc:id="2cc0f4c8-1de0-4ed9-a523-7f6b6e218ccb" message='####Few orders got failed and the process resumed for other orders### ERROR ### #[error]'/>
+				<http:request method="PUT" doc:name="OrderStatusUpdate" doc:id="10c71896-87dc-4bb2-a6e7-4fa5f84e62c1" config-ref="HTTP_Request_sysSFCC" path="/{order_id}" target="ordStatusRes" responseTimeout="20000">
+					<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	
+	"c_orderFailedStatus" : "FAILED"
+	
+}]]]></http:body>
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	order_id : vars.orderID
+}]]]></http:uri-params>
+					<http:query-params ><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	env : vars.envVar
+}]]]></http:query-params>
+				</http:request>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="prc-order-NORA-scheduler" doc:id="f213ddff-6da5-4a8d-adbc-34a5380765be" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="8077bee5-4dbe-435c-963b-7b9e92242c85" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="MINUTES" startDelay="1"/>
+			</scheduling-strategy>
+		</scheduler>
+		<tracking:transaction doc:name="Set Transaction Id" doc:id="a01f2028-2e7c-40a9-bf7e-f14e1b1155ec" id='#[now() as String {format: "yyyyMMddHHmmssSSS"}]'/>
+		<set-variable value="NORA" doc:name="SetEnvironment" doc:id="295e7b18-b3a9-4b62-aefd-b3454590ed48" variableName="envVar"/>
+		<set-variable value="standard" doc:name="SetShipmentType" doc:id="b6fdf682-02e4-4484-be74-94cba95cd490" variableName="shipmentType" />
+		<ee:transform doc:name="set_remorseperiod" doc:id="fc3f046a-be02-4863-b4e2-f43231170fb6" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="remorseTime" ><![CDATA[%dw 2.0
+output application/java
+---
+(now() - |PT2H| >> "UTC") as String {format: "yyy-MM-dd'T'HH:mm:ss.SSS'Z'"}]]></ee:set-variable>
+				<ee:set-variable variableName="reprocessTime" ><![CDATA[%dw 2.0
+output application/java
+---
+(now() - |PT2H| >> "UTC") as String {format: "yyy-MM-dd'T'HH:mm:ss.SSS'Z'"}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="05e44c60-580d-424c-bef7-a586cf82ad7c" name="prc-order-apiFlow" targetValue="#[payload]"/>
+	</flow>
+	<flow name="prc-order-NORA-Express-scheduler" doc:id="d730a511-99f9-46da-a219-89b6eba0b4e9" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="2751f080-d825-4008-a696-58e24b8d48d7" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="3" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<tracking:transaction doc:name="Set Transaction Id" doc:id="651e4ffd-e94b-47ce-8984-f083b2c63c71" id='#[now() as String {format: "yyyyMMddHHmmssSSS"}]'/>
+		<set-variable value="NORA" doc:name="SetEnvironment" doc:id="c7d7b996-cf2d-476f-8dab-2c3f36c5bf3f" variableName="envVar" />
+		<set-variable value="express" doc:name="SetShipmentType" doc:id="b555c223-9c1a-4354-9ecf-88bd724bbcd7" variableName="shipmentType"/>
+		<ee:transform doc:name="set_remorseperiod" doc:id="a89919dc-29e2-4990-ad86-88210dfe99ed">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="reprocessTime"><![CDATA[%dw 2.0
+output application/java
+---
+(now() - |PT5M| >> "UTC") as String {format: "yyy-MM-dd'T'HH:mm:ss.SSS'Z'"}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="dbc24c4a-3623-4ef9-a91a-7aacbc106eda" name="prc-order-apiFlow" targetValue="#[payload]" />
+	</flow>
+</mule>
