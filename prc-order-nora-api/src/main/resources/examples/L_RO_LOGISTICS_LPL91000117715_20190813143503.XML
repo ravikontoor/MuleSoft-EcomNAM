@@ -1,0 +1,50 @@
+<?xml version="1.0"  encoding="utf-8" standalone="yes"?>
+<orders>
+   <order>
+      <header>
+         <store_code>LEE-PL</store_code>
+         <client>CHNJ8RCZ0GW</client>
+         <num>LPL91000117715</num>
+         <date>2019-08-13</date>
+         <customer>
+            <order_name>Justyna Kula</order_name>
+            <company_code/>
+            <shipping_adress>
+               <dropoffpoint_id/>
+               <booking_code>UPS01STD_U72048161_166002/2019-08-13/*-*/*/*-*</booking_code>
+               <notification_type>N</notification_type>
+               <shipping_name>SKLEP DO-DO</shipping_name>
+               <adr1> POPIELUSZKI 11UPS ACCESS POINT</adr1>
+               <zip>01595</zip>
+               <city>WARSZAWA</city>
+               <country>PL</country>
+               <label_tag1/>
+            </shipping_adress>
+            <recipient>
+               <recipient_name>Justyna Kula</recipient_name>
+               <recipient_adr1>Krasi?skiego 61/32</recipient_adr1>
+               <recipient_zip>01-755</recipient_zip>
+               <recipient_city>Warszawa</recipient_city>
+               <recipient_country>PL</recipient_country>
+            </recipient>
+            <telephone>0048504041954</telephone>
+            <email>justyna.kula@aol.com</email>
+            <delivery_information/>
+            <carrier_code>UC</carrier_code>
+            <delivery_rule>standard</delivery_rule>
+         </customer>
+      </header>
+      <lines count="1">
+         <line>
+            <ref>L55ZAEYG 00 L</ref>
+            <current_qty>1</current_qty>
+         </line>
+      </lines>
+      <footer>
+         <articles_count>1</articles_count>
+         <language>PL</language>
+         <order_currency>PLN</order_currency>
+         <order_amount>238.05</order_amount>
+      </footer>
+   </order>
+</orders>
