@@ -1,0 +1,2577 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"
+   elementFormDefault="qualified" targetNamespace="http://www.vfc.com/esb/OnlineOrder/1"
+   xmlns:vfc="http://www.vfc.com/esb/OnlineOrder/1" version="">
+  <xsd:complexType name="Contact">
+    <xsd:annotation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">ContactABIEType is logically derived from UN/CEFACT TBG17 ABIE ContactType as defined in the Reusable Aggregate Business Information Entity (RUABIE) XML Schema file.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="id" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Is the Identifiers of the given instance of an entity within the scope of the integration. The schemeAgencyID attribute identifies the party that provided or knows this party by the given identifier.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="type" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the type of the object in which associated.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="name" type="vfc:PersonName" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the Name of the contact.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="jobTitle" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is the position or designation of the pesron with whom associated within the given organization. Examples are Director, Software Engineer, Purchasing Manager etc</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="responsibility" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>A text description of the responsibility of the associated entity.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="departmentName" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>(V159)Describes the department of the contact person.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="departmentDescription" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>(V160)Description of the Department.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="communication" type="vfc:Communication" minOccurs="0"
+         maxOccurs="unbounded"/>
+      <xsd:element name="phoneNumber" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="vfc:TelephoneCommunication">
+              <xsd:attribute name="deviceType">
+                <xsd:annotation>
+                  <xsd:documentation>Type of phone device. Example, Telephone,  "Mobile"  "Other"
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="alternatePhoneNumber" type="vfc:TelephoneCommunication"
+         minOccurs="0"/>
+      <xsd:element name="mobileTelephoneCommunication" type="vfc:TelephoneCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="faxTelephoneCommunication" type="vfc:TelephoneCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="pagerTelephoneCommunication" type="vfc:TelephoneCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="emailAddressCommunication" type="vfc:EmailAddressCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="instantMessageCommunication" type="vfc:ElectronicCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="internetAddressCommunication" type="vfc:ElectronicCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="socialNetworkCommunication" type="vfc:ElectronicCommunication"
+         minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="address" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="vfc:Address">
+              <xsd:attribute name="lang"/>
+            </xsd:extension>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="preference" type="vfc:Preference" minOccurs="0"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>(V145)Contact person description.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="certifiedEmailAddressCommunication" minOccurs="0">
+        <xsd:complexType>
+          <xsd:all minOccurs="0">
+            <xsd:element name="countryCode" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="taxCode" type="xsd:string" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Tax Code for e-Invoicing</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="emailAddressID" type="xsd:string" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Electronic Certified Posts Email</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="textLine" type="xsd:string" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Electronic Certified Posts Notes</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="StateChange">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="fromStatus" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="toStatus" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="changeDateTime" type="xsd:dateTime" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OnlineOrderHeader">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="actionCriteria" type="vfc:ActionCriteria" minOccurs="0"/>
+      <xsd:element name="stockDYOCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This field indicates the existance of "design your own" and/or "stock" items exist on the order
+
+Integration use of the field is typically for routing and/or filtering requirements.
+
+Acceptable values: 'STOCK', 'DYO' or 'BOTH'
+'STOCK' - all line items are stock
+'DYO' - all line items are DYO
+'BOTH' - line items contain both stock and DYO line items
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:group minOccurs="0" ref="vfc:OrderIDSet"/>
+      <xsd:element ref="vfc:giftOrderInd" minOccurs="0"/>
+      <xsd:element ref="vfc:priorityCode" minOccurs="0"/>
+      <xsd:element name="customerID" type="vfc:CustomerID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents logical customer for this online order brand</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:currencyCode" minOccurs="0"/>
+      <xsd:element name="paymentInfo" type="vfc:PaymentInfo" minOccurs="0"
+         maxOccurs="unbounded"/>
+      <xsd:element name="gift" type="vfc:Gift" minOccurs="0"/>
+      <xsd:element name="vas" type="vfc:VAS" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="vfc:inventoryChannel" minOccurs="0"/>
+      <xsd:element name="createDateTime" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the timestamp of when the OnlineOrder was created by the order entry application in which the order was placed</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:retailStoreID" minOccurs="0"/>
+      <xsd:element ref="vfc:neverOutInd" minOccurs="0"/>
+      <xsd:element name="enteredBy" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Employee ID of person at retail store who placed the order</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:orderTotal" minOccurs="0"/>
+      <xsd:element ref="vfc:orderShippingTotal" minOccurs="0"/>
+      <xsd:element name="orderSourceMethodCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A code which represents where an on-line sales order originated.
+
+Examples:
+"Kiosk" - order entered within a retail store
+"Web" - order entered on web site
+
+To be removed later - WCS sends business channel id with one of the following values:
+   -1   entered on a web site
+   -3   entered in a retail store kiosk
+   -4   entered by Customer Service (Telesales)
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="orderItemTotal" type="vfc:OrderAmounts" minOccurs="0"/>
+      <xsd:element name="requestedDeliveryDateQualifierCode" type="xsd:string"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier used to adjust the meaning of the date on which a particular set of goods has been requested to be delivered to accommodate customer preferences.
+Example "NB" - not before
+             </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipmentID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular shipment as designated by the system that reports the shipment.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:customerVendorID" minOccurs="0"/>
+      <xsd:element name="discountTypeCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Designates the type of discount if any.  Example = "FREE" (free shipping)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="orderDate" type="vfc:OrderToCashDateSet" minOccurs="0"/>
+      <xsd:element ref="vfc:orderSourceCode" minOccurs="0"/>
+      <xsd:element name="texts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="text" type="vfc:OrderText" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="promotionID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The identifier for the promotion that was used when the associated order was placed</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="orderCustomizationTotal" type="vfc:OrderAmounts"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This represents total customization charges for all lines of the order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="orderLanguageCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>It indicates language code of an order.This is a 2 byte code. 
+Example would be Germany. Its value would be "DE".</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="adjustments" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="adjustment" type="vfc:Adjustment" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ugcInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User Generated Content-when consumer provides content for a DYO order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="itemURL" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>URL that displays item/product detail page.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="registeredConsumerInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indiactes whether orders that are placed with a registered consumer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:group minOccurs="0" ref="vfc:OrderQuantitySet"/>
+      <xsd:element name="proSiteInd" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="status" type="vfc:Status" minOccurs="0"/>
+      <xsd:element name="consumerContact" type="vfc:Contact" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="VAS">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular value added service.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A textual description of a particular value added service.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="supplementalText" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional textual information useful in successfully applying a value added service to a particular order or item on an order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="typeCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Designates whether a particular valued added service is for ticketing (T), packing (P) or special services (S).
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Tax">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular tax code.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="rate" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The tax rate or percentage.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:amount" minOccurs="0"/>
+      <xsd:element ref="vfc:taxJurisdictionCode" minOccurs="0"/>
+      <xsd:element name="districtTax" type="vfc:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A district tax is a tax paid to district taxing authority.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="countyTax" type="vfc:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A county tax is a tax paid to county taxing authority.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="stateTax" type="vfc:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A state tax is a tax paid to state taxing authority.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="cityTax" type="vfc:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A city tax is a tax paid to city taxing authority.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="taxExemptionID" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="vatRegistrationCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="vatRate" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="grossSurcharge" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="amountSurcharge" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="withholdingAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Tax Amount which is witheld from Vendor</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="exemptedAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Tax Amount which is exempted for witheld from Vendor</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="baseAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Base amount used to determine tax withholding.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Adjustment">
+    <xsd:all minOccurs="0">
+      <xsd:element name="type" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates type of adjustment.  Example ?promotion?</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="id" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>ID represents the instance of this adjustment</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code used to denote a description for adjustment</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Description text for code.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:amount" minOccurs="0"/>
+      <xsd:element name="action" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="level" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates adjustment level(order,line etc..)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+  <xsd:complexType name="OrderAmounts">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Amount within the element's context inclusive of sales tax and discounts</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="discountAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Discount amount within the element's context</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="salesTaxAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Sales Tax amount within the element's context</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="salesTaxCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>sales tax code within the element's context</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="salesTaxRate" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>sales tax percentage within the element's context</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="beforeTaxAmount" type="vfc:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Amount not including tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShippingMode">
+    <xsd:sequence minOccurs="0">
+      <xsd:element ref="vfc:carrierID" minOccurs="0"/>
+      <xsd:element name="serviceLevelCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is a VF code that specifies a particular type or quality of carrier delivery service to be used for transporting goods.
+See carrierServiceLevelCode for specifying the carrier's actual service level code.
+This code is unique to VF applications and may be the same, but not required to be, as the carrierServiceLevelCode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="serviceLevelName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is a generic name that describes the quality of service to be used for transporting goods.
+
+Possible Examples:
+
+Ground
+2nd Day Air
+Next Day Air
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="carrierServiceLevelCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The carrier's code or marketing term for specifying a particular type or quality of delivery service to be used for transporting goods.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="carrierServiceLevelName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name that a carrier gives to a specific quality of service to be used for transporting goods.
+This would be the name that they give for the carrierServiceLevelCode
+
+Possible Examples:
+
+FedEx Ground
+FedEx 1Day
+FedEx 2Day
+UPS Groundsaver
+UPS 1Day
+UPS 2nd Day
+UPS Home Delivery
+
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:transportationMethodCode" minOccurs="0"/>
+      <xsd:element name="scacID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The Standard Carrier Alpha Code, a two-to-four digit identification, is used by (in the United States) transportation industry to identify freight carriers in computer systems and shipping documents such as Bill of Lading, Freight Bill, Packing List, and Purchase Order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="contact" type="vfc:Contact" minOccurs="0"/>
+      <xsd:element name="standardCarrierInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>It represents carrier type.
+Customer can select if they want to use a VF carrier or not.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="expectedDuration" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Expected duration of shipping .It is a free from text.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="carrierName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="standardCarrierCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="standardCarrierName" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Status">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Element for the communication of all codes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="effectiveDateTime" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">This is the DateTime the associated object is made effective</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="reasonCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Identifies the reason for an activity</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="reason" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderToCashDateSet">
+    <xsd:all minOccurs="0">
+      <xsd:element ref="vfc:customerOrderDate" minOccurs="0"/>
+      <xsd:element name="receivedDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date the order was received from the customer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="requestedDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date the customer has requested to be shipping date for the order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="requestedDeliveryDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date on which the customer requests that VF's shipment to them should arrive at their location.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="customerCancelDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date after which the customer requests the order to be canceled if not shipped.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipNotBeforeDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date the customer has requested to be the earliest possible shipping date.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipNotAfterDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date the customer has requested to be the latest possible shipping date.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="fixedValueDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date used for calculating the pricing on an order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="confirmedDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date on which the product has been scheduled and promised to ship.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date on which an order was shipped to the customer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="invoiceDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date on which a customer was billed for a sales order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="paymentDueDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date by which the customer is expected to pay for sales order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="orderCreationDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date and time of the creation of the sales order within VF's system.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="settlementDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Settlement Date is the date on which a transaction is settled.
+That is, the actual day on which transfer of cash or assets is completed.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="additionalDate" type="xsd:dateTime" minOccurs="0"/>
+      <xsd:element name="fixedValue2Date" type="xsd:dateTime" minOccurs="0"/>
+    </xsd:all>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerID">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="soldTo" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the identifier of the customer who the order was sold to</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipTo" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the identifier of the customer who the order will ship to</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="markFor" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the identifier of the customer's secondary location who will receive the order</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="billTo" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the identifier of the customer who will receive the invoice for the order</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="consolidated" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the identifier of the customer who performs consolidation services
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="loyaltyID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer account ID for a customer loyalty program.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ElectronicCommunication">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="id" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An identifier that identifies an internet address.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="useCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code identifying the usage of the contact point e.g. business, private, etc.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="preference" type="vfc:Preference" minOccurs="0"
+         maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FacilityID">
+    <xsd:annotation>
+      <xsd:documentation>The date and time on which the delivery should arrive and be available for inbound processing.
+</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="id" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="shipFrom" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Ship From Distribution Center facility identifier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipTo" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Ship To Distribution Center facility identification</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="markFor" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Secondary Facility that the Ship To location might ship to</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="label" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the facility code that is used for our AAFES account.
+The store and facility is printed on the shipping label.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="pickupFrom" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>It represents where an order will be picked up.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Carton">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="measurementInfo" type="vfc:MeasurementSet" minOccurs="0"/>
+      <xsd:element name="packQuantity" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The number of units of (an) item(s) within a shipping carton.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="carrierTrackingID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier as defined by the delivering party for a carton or package of items.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="enterpriseTrackingID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier as defined in VF systems for a carton or package of items.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="enterprisePalletTrackingID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier as defined in VF systems for a pallet of cartons or packed items.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date on which the carton was shipped.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shippingMode" type="vfc:ShippingMode" minOccurs="0"/>
+      <xsd:element name="typeCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular type of handling unit.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="packedWeight" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The measurement of heaviness for the carton and its contents.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:billOfLadingID" minOccurs="0"/>
+      <xsd:element ref="vfc:manifestID" minOccurs="0"/>
+      <xsd:element name="markForCustomerFacilityID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier within a customer's system for the ultimate destination for the order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="cartonPalletCode" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonName">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="title" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Is the title of the person. For example: Mr, Miss, Mrs, Dr, etc</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="givenName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is the Person's given name or first name.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="middleName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Is the person's middle name.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="familyName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is the person's family name.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="suffixName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="maidenName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="nickName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="salutationPreferredName" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Way the person is addressed e.g. Honorable etc?</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="name" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the Name of the object in which associated.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="type"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="secondaryFamilyName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A secondary specification of familyName</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="formattedName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Contains, in one string, a fully formatted name with all of its pieces in their proper place. This name is only
+used in a response and is not used for requests.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="reportingName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Contains, in one string, a fully formatted name for reporting with all of its pieces in their proper place. This name is only used in a response and is not used for requests.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="fullLegalName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Contains the legal name for a person. A person must name one and only one legal name.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MeasurementSet">
+    <xsd:sequence minOccurs="0">
+      <xsd:element ref="vfc:length" minOccurs="0"/>
+      <xsd:element ref="vfc:width" minOccurs="0"/>
+      <xsd:element ref="vfc:height" minOccurs="0"/>
+      <xsd:element ref="vfc:volume" minOccurs="0"/>
+      <xsd:element ref="vfc:weight" minOccurs="0"/>
+      <xsd:element name="grossWeight" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="netWeight" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Price">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="sellingAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Actual selling price of item, used in ticketing, etc.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="retailAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer regular (undiscounted) retail price for ticketing.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="suggestedRetailAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Price that the seller recommends as the price for the end consumer to the retail customer </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="originalSellingAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The actual selling price of item at the beginning of a season.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OnlineOrderLine">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="actionCriteria" type="vfc:ActionCriteria" minOccurs="0"/>
+      <xsd:element name="dyoInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Design Your Own indicator - This field indicates whether this line item is "design you own" product.
+This means that the item is designed by the customer from the order entry application.
+Integration use of the field is typically for routing and/or filtering requirements.
+
+Acceptable Values
+"Y" = This line item is DYO
+"N" = This line item is STOCK</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="lineID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number associated with the Line.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:group minOccurs="0" ref="vfc:ItemIDSet"/>
+      <xsd:element ref="vfc:uomCode" minOccurs="0"/>
+      <xsd:element name="unitPrice" type="vfc:Price" minOccurs="0"/>
+      <xsd:element name="unitPriceBreak" type="vfc:PriceBreak" minOccurs="0"/>
+      <xsd:element name="taxInfo" type="vfc:Tax" minOccurs="0"/>
+      <xsd:group minOccurs="0" ref="vfc:OrderQuantitySet"/>
+      <xsd:element name="extendedPrice" type="vfc:Price" minOccurs="0"/>
+      <xsd:element name="facilityID" type="vfc:FacilityID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer's shipping facility
+possibly model as customerFacility.shipTo</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shipping" type="vfc:OrderAmounts" minOccurs="0"/>
+      <xsd:element name="shippingMode" type="vfc:ShippingMode" minOccurs="0"/>
+      <xsd:element name="shippingContact" type="vfc:Contact" minOccurs="0"/>
+      <xsd:element name="giftLineInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether this line of an order is a gift.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="gift" type="vfc:Gift" minOccurs="0"/>
+      <xsd:element name="vas" type="vfc:VAS" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="cartons" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="carton" type="vfc:Carton" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="shipmentID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular shipment as designated by the system that reports the shipment.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="sourceSystemItemDescription" type="xsd:string"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A textual description of a particular style as defined by a particular order source system.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="sourceSystemItemColorDescription" type="xsd:string"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A textual description of a particular color as defined by a particular order source system.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="sourceSystemItemSizeDescription" type="xsd:string"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A textual description of a particular size as defined by a particular order source system.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="shippingInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator that denotes whether this order line should be Direct Ship (shipped directly to the customer from our manufacturer) or Ship from DC (shipped from our distribution center to the customer)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="customVariants" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="customVariant" type="vfc:CustomVariant" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="texts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="text" type="vfc:OrderText" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="extendedPriceBreak" type="vfc:PriceBreak" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This represents the extended discount amounts for the line.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="unitCustomization" type="vfc:OrderAmounts" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This represents customization charges for the unit.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="extendedCustomization" type="vfc:OrderAmounts"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This represents the extended customization charges for the line.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="pickupCollectionPoint" type="vfc:CollectionPoint"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Common area where customers can have their shipment sent to. They will pick it up at this location.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="adjustments" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="adjustment" type="vfc:Adjustment" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element ref="vfc:itemCatalogID" minOccurs="0"/>
+      <xsd:element name="alternateLineID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents an alternate line id from within application that created the order.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="status" type="vfc:Status" minOccurs="0"/>
+      <xsd:element name="giftCardAmount" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="monogrammingAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>amount paid to add monogramming on the product bought</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentInfo">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="nameOnAccount" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name on the payment account</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Indicates the name on the account, in the case of a credit card the name exactly as it appears on the credit card.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="payMethodCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code representing the payment method used for the order. 
+
+Examples:
+MC=MasterCard, DISC=Discover Card, VISA, GC=Gift Card, AMEX=American Express, SC=Store Credit, PayPal, REPL=replacement, PROMO=promotionetc...</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="payMethodType" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents the payment method type which was used for the order.  This is a higher level categorization of a payment method. 
+
+Possible Examples:
+Credit Card, Store Credit, EBT=Electronic Bank Transfer, Paper Check, 3rd Party Billing, Gift Card, Others</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="paymentAccountExpiration" type="vfc:PaymentExpiration"
+         minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Expiration date (MMYY) of the payment account</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Indicates the expiration month and year of the credit card.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="companyName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Company name of payment account
+
+Examples: Captial One, Bank name</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Company name on the credit card.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="accountSuffix" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The last four digits of the account number.</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Account Number, depending upon the context used this may be the credit card number of the checking account number, etc.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="revenueSourceID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>** NEED DESCRIPTION ***
+The following annotation is from OAGIS.
+The revenue source to be used in the payment authorization.  In some instance this field indicates the division.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="remittanceBankID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the Bank in which the PaymentAuthorization needs is to  send the money.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="cardCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>CardCode or Card Id field that can be optionally provided to use additional security features of credit card authorization. It is typically a 3 digit number located on the back of most credit cards.
+
+For American Express, it is a 4 digit number on the front.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="authorizationAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Authorization amount</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+              <xsd:attribute name="exchangeRate">
+                <xsd:annotation>
+                  <xsd:documentation>It represents an exchange rate of the foreign currency.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authorizationCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>If the method of payment was authorized (credit Card or EFT), this is the authorization information that was passed back from the 3rd party.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="billingContact" type="vfc:Contact" minOccurs="0"/>
+      <xsd:element ref="vfc:referenceOrderID" minOccurs="0"/>
+      <xsd:element ref="vfc:payMethodName" minOccurs="0"/>
+      <xsd:element name="paymentService" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The entity or service provider that process the payment transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="paymentID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Serial number or unique ID of pay method specified.
+Example: Serial number of Voucher.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="expirationDateTime"/>
+              <xsd:attribute name="issueDateTime"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="availableAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Remaining amount available on pay method specified.
+Example: Voucher or Gift Card may have an available balance.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="cancelInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>It represents specific payment info has been voided/cancelled</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="paymentProvider" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>It represents provider,which provides payment service.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="settlementID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The settlement transaction ID.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="settlementRequestID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The request identifier returned by the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="authorizationID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>For charge requests, this field holds the authroization ID to be used for charging the amount.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomVariant">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="componentID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular type of part within a finished product.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="characteristicID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular type of part within a finished product.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attributeID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular differentiation applied to a component part of a finished product. (special color, labeling, etc.)
+
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="valueID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for a particular differentiation applied to a characteristic part of a finished product. (special color, labeling, etc.)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="legacyPartID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier within a legacy system for a particular differentiation applied to a component part of a finished product. (special color, labeling, etc.)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="componentDescription" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Textual description for a particular type of part within a finished product.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentExpiration">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="month" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Expiration month on Card.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="year" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Is the financial year in which this accounting period occurs. Generally a period of 12 months for which the company regularly has to create financial statements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserData">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="userDataField" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="name"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Communication">
+    <xsd:annotation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">CommunicationABIEType is logically derived from UN/CEFACT TBG17 ABIE CommunicationType as defined in the Reusable Aggregate Business Information Entity (RUABIE) XML Schema file.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="uri" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="htmlPreferredInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that the associated entity prefers HTML format.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="channelCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the channel in which the associated entity comes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="useCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code identifying the usage of the contact point e.g. business, private, etc.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="preference" type="vfc:Preference" minOccurs="0"
+         maxOccurs="unbounded"/>
+      <xsd:element name="address" type="vfc:Address" minOccurs="0"/>
+      <xsd:element name="access" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The text that permits access to the electronic network of the associated communication number such as telephone network, for example 9, *70.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="extension" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The extension of the associated communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="dialNumber" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The communication number, not including country dialing or area dialing codes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="areaDialing" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The area dialing code for a communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="countryDialing" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The country dialing code for a communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CodeName">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code within the element's context.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="name" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Name within the element's context.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Gift">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="wrapInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether or not gift wrap should be provided.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wrapUnitPriceAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the unit price amount of the gift wrap</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="wrapSalesTaxAmount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the tax amount of the gift wrap</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="currencyCode"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="message" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Gift wrap message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="fromContact" type="vfc:Contact" minOccurs="0"/>
+      <xsd:element name="toContact" type="vfc:Contact" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TelephoneCommunication">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="countryDialingCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The country dialing code for a communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="areaDialingCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The area dialing code for a communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="dialNumber" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The communication number, not including country dialing or area dialing codes.
+ </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="extension" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The extension of the assoicated communication number.</xsd:documentation>
+          <xsd:documentation source="httpwww.openapplications.orgplatform1">The extension of the assoicated communication number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="useCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code identifying the usage of the contact point e.g. business, private, etc.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="access" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The text that permits access to the electronic network of the associated communication number such as telephone network, for example 9, *70.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="isPublic" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the phone is public.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="isPrimary" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the phone is Primary. 
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="formattedPhoneNumber" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is a standard representation of a phone number for VF.  The freeformPhoneNumber is modified to a standard format contained in this element.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="freeformPhoneNumber" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is free form representation of a phone number captured by a source application.  Typcially, the source application may not have formatted it in any way therefore, it may or may not contain countyDialingCode, areaDialingCode and any formatting characters such as ().</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Address">
+    <xsd:annotation>
+      <xsd:documentation>Address information</xsd:documentation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">Address BaseType provides the information about the address or semantic address of an associated entity.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="id" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Is the Identifiers of the given instance of an entity within the scope of the integration. The schemeAgencyID attribute identifies the party that provided or knows this party by the given identifier.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="type" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the type of the object in which associated.</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Indicates the type of the object in which assoicated.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="formatCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Format Code indicates the format of the address. Examples are US Military, US Formatted Address, European Formatted Address etc. There is no intent to decode the address formats - these are informational only. No list of valid values exists or is proposed here.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attentionOfName" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>The name of the person or organization that the associated entity is intended.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="careOfName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>The name that the associated entity is sent by.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:taxJurisdictionCode" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="addressLine" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="buildingNumber" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The Number of the building or house on the street that identifies where to deliver mail.
+For example, Building 300 on Standards Parkway</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="buildingName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The building or house name on the street that identifies where to deliver mail</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="streetName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The Street Name where the building/ house is located.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="unit" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the apartment number or office suite.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="floor" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The floor where the housename is located</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="postOfficeBox" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifies a Post Office Box number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="deliveryPointCode" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the Dock or the Mail Stop or Lane or any other specific Delivery Point. </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="citySubDivisionName" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>The name of the city or county (district) that is driven from the tax jurisdiction code; 
+comes from Vertex;US only; Taxing authority that this falls under.</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Qualifies the further division of the City, example a city may have many districts or Boroughs. The type attribute identifies the type of this entity e.g. City, Borough etc, and there is a pre-defined list of types supported, with the ability to add new ones as necessary</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="cityName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the town or the city</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="companyName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="stateProvinceCode" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Name of the state or province.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="stateProvinceName" type="xsd:string" minOccurs="0"
+         maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Name of the state or province.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="countryCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Country in which the Address is in.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="postalCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Postal Code of the Address.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="alternatePostalCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The vendor postal code - Alternative Language</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="countyName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name of the surrounding county or other governmental district.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="status" type="vfc:Status" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the status of the associated object by providing the Status Code along with a description and when the status is effective.</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Indicates the status of the associated object by providing the Status Code along with a description and when the status is effective.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="publicInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this address is public or not. If the value is set to False then it should not be shared
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="primaryInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the communication method is Primary. 
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="locationDescription" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents a description of a location in the context where used.  It can be freeform, but if corresponding locationCode element is populated, it should contain a valid description of it.
+
+For example: In the WorkDay project this represents VF Retail/Wholesale store location.
+ex: USCA > USA > Mississippi > Batesville 053 - VFO
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="countryName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Country name in which the Address is in.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="locationCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The two first digits indicates the country in which the place is located.   The values used concur with the  ISO 3166 alpha-2 Country Code. You can also review a complete list of countries and their code value. In cases where no ISO 3166 country code element is available, e.g. installations in international waters or international cooperation zones, the code element "XZ", available for user assignment in accordance with clause 8.1.3 of ISO 3166-1/1997, will be used.
+ 
+In the next part consists of a 3-character code for the location.   The 3-character code element for the location will normally comprise three letters. However, where all permutations available for a country have been exhausted, the numerals 2-9 may also be used.
+ 
+Thus, a complete element is a combination of a 2-character country code and a 3-character location code, e.g. BEANR is known as the city of Antwerp (ANR) which is located in Belgium (BE).</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ActionCriteria">
+    <xsd:annotation>
+      <xsd:documentation>The BOD that the action code is to be performed.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="actionExpression" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="changeStatus" type="vfc:StateChange" minOccurs="0"/>
+      <xsd:element name="reason" type="vfc:CodeName" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PriceBreak">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="discountAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates an amount of discount that is available against a price</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="discountPercent" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates a percentage of discount that is available against a price</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="overridePrice" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="priceBreakQuantity" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The quantity that must be purchased of the item or commodity on a given price list line before the benefit, or until the detriment of a given price break line will apply.  For example, if a customer orders up to 5000 units of flour, they will get a price of $8:00 a case.  If the customer buys 5500 units of flour they will get a price of $7.50 a case</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="priceBreakAmount" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The monetary amount that must be spent on a given price list line before the benefit or until the detriment of a given price break line will apply.  For example, if a customer orders up to 5000 dollars worth of flour, they will get a price of $8:00 a case.  If the customer buys 5500 dollars worth of flour they will get a price of $7.50 a case</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EmailAddressCommunication">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="useCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code identifying the usage of the contact point e.g. business, private, etc.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="emailAddressID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An identifier that identifies an electronic mail address.</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1"/>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="htmlPreferredInd" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that the associated entity prefers HTML format.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="preference" type="vfc:Preference" minOccurs="0"
+         maxOccurs="unbounded"/>
+      <xsd:element name="isPublic" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the email is public.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="isPrimary" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the email is Primary.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CollectionPoint">
+    <xsd:annotation>
+      <xsd:documentation>Common area where customers can have their shipment pick up or drop off.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="vfc:CodeName">
+        <xsd:sequence minOccurs="0">
+          <xsd:element name="contact" type="vfc:Contact" minOccurs="0"/>
+          <xsd:element name="date" type="xsd:dateTime" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>Actual date with in the element's context.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Amount">
+    <xsd:sequence minOccurs="0">
+      <xsd:element ref="vfc:amount" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderText">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="id" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="code" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="languageCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The unique identifier for the language used in the accompanying text.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ISOLanguageCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The unique ISO identifier for the language used in the accompanying text.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="textLine" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Preference">
+    <xsd:annotation>
+      <xsd:documentation>A unique identifier for the language of the accompanying contact.</xsd:documentation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">PreferenceABIEType is logically derived from UN/CEFACT TBG17 ABIE PreferenceType as defined in the Reusable Aggregate Business Information Entity (RUABIE) XML Schema file.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="sequence" type="xsd:integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A value expressing the value of a Sequence.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="indicator" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="effectiveTimePeriod" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the time period in which the associated component is effective.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="endDateTime" type="xsd:dateTime" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation source="http://www.openapplications.org/platform/1">Is the ending timestamp of the event.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="duration" type="xsd:string" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation source="http://www.openapplications.org/platform/1">Indicates the duration of time as represented by ISO 8601. Where the value space is a six dimensional space where the coordinates designate the Gregorian year, month, day, hour, minute, and second. The number of seconds can include decimal digits to arbitary pecision.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="startDateTime" type="xsd:dateTime" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation source="http://www.openapplications.org/platform/1">Start timestamp indicating the starting point of the event.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="inclusiveIndicator" type="xsd:string" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation source="http://www.openapplications.org/platform/1">The InclusiveIndicator element is used to identify whether the SearchValue should be an included or excluded component of the result set.  For example, if a user was looking for ballpoint pens, but NOT red ballpoint pens, the transaction would contain two instances of the SearchTerm data type one containing a SearchValue of ?Ballpoint? and an SearchValueInclusive of 'Inclusive' and one containing a SearchValue of ?Red? and an SearchValueInclusive of 'Exclusive'</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContextHeader">
+    <xsd:annotation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">Identifies the sender of the given BOD instance</xsd:documentation>
+    </xsd:annotation>
+    <xsd:all minOccurs="0">
+      <xsd:element name="hostName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name of the server as defined in the domain of the network that issued the Business Object Document
+This host name is where the application resides.
+Examples:ITGCURS151, ITGCURS62, ITGC600K, ITGC2AWMB3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="applicationID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The business application identifier that issued the Business Object Document.
+Examples:WCSTNF, MDM, SAP</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="subApplicationID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents a further specification of the business application that issued the Business Object Document.
+Examples:
+For applicationID: "WCSB2C", a value of "201" would represent the logical store within WCS Reference store
+For applicationID: "SAP, a value of "100" would represent the client instance within SAP.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="businessEvent" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Describes the business event that initiated the need for the Business Object Document to be created. Its use is optional. Although the Task may differ depending on the specific implementation, it is important to enable drill back capability. Example Tasks may be Receipt or Adjustment.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="businessID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Value uniquely identifing the transaction.  This value is one that the business would know in context of the service that is being used.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="eventID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Enables the sending application to indicate the instance identifier of the event or task that caused the BOD to be created. This allows drill back from the BOD message into the sending application. This may be required in environments where an audit trail must be maintained for all transactions.
+Example: 20130128123015000004</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="correlationID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Enables the sending application to group together related messages. 
+
+Typical use of this field would be to correlate together a group of transactions that are related from the standpoint that one directly caused the creation of another.
+In other words an "asynchronous unit of work"
+
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="confirmationCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is an option controlled by the Sender business application.  It is a request to the receiving application to send back a confirmation BOD to the sender. The confirmation Business Object Document may indicate the successful processing of the original Business Object Document or return error conditions if the original Business Object Document was unsuccessful.
+
+The confirmation request has the following valid values:
+
+Never - No confirmation Business Object Document requested
+
+OnError - OnError send back a confirmation Business Object Document only if an error has occurred
+
+Always - Always send a confirmation Business Object Document regardless</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="authorizationID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Identifyies the authorization level of the user or application that is sending the Business Object Document Message. This authorization level being recognized be the receiving system indicates what can be done on the receiving system(s).</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="coalitionID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The VF coalition identifier that currently manages the VF brand that issued this Business Object Document</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OD">
+              <xsd:annotation>
+                <xsd:documentation>OutDoor and Action Sports</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="JW">
+              <xsd:annotation>
+                <xsd:documentation>JeansWare</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="IW">
+              <xsd:annotation>
+                <xsd:documentation>ImageWare</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="SW">
+              <xsd:annotation>
+                <xsd:documentation>SportsWare</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="CB">
+              <xsd:annotation>
+                <xsd:documentation>Contemporary Brands</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="brandID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The VF brand within the VF Coalition that issued this Business Object Document</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="TB">
+              <xsd:annotation>
+                <xsd:documentation>TimberLand</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="SW">
+              <xsd:annotation>
+                <xsd:documentation>SmartWool</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="NF">
+              <xsd:annotation>
+                <xsd:documentation>NorthFace</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="VN">
+              <xsd:annotation>
+                <xsd:documentation>Vans</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="JS">
+              <xsd:annotation>
+                <xsd:documentation>JanSport</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="EC">
+              <xsd:annotation>
+                <xsd:documentation>EagleCreek</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="RF">
+              <xsd:annotation>
+                <xsd:documentation>Reef</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="LU">
+              <xsd:annotation>
+                <xsd:documentation>Lucy</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="NA">
+              <xsd:annotation>
+                <xsd:documentation>Nautica</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="KP">
+              <xsd:annotation>
+                <xsd:documentation>Kipling</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="LE">
+              <xsd:annotation>
+                <xsd:documentation>Lee</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="WR">
+              <xsd:annotation>
+                <xsd:documentation>Wrangler</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="NP">
+              <xsd:annotation>
+                <xsd:documentation>Napapijri</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="EK">
+              <xsd:annotation>
+                <xsd:documentation>Eastpak</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="TR">
+              <xsd:annotation>
+                <xsd:documentation>Terra</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="DK">
+              <xsd:annotation>
+                <xsd:documentation>Dickies</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="KD">
+              <xsd:annotation>
+                <xsd:documentation>Kodiak</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="IB">
+              <xsd:annotation>
+                <xsd:documentation>IceBreaker</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="AL">
+              <xsd:annotation>
+                <xsd:documentation>Altra</xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="countryCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Country code for which the application is designated for which this Business Object Document was created.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="channelID" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="invChannelID" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ordChannelID" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="routeKeys" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="routeKey" minOccurs="0" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                    <xsd:attribute name="name"/>
+                  </xsd:extension>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="userData" type="vfc:UserData" minOccurs="0"/>
+      <xsd:element name="systemLocationIDs" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Represents a further specification of the business application that issued the Business Object Document.
+Examples:
+For applicationID: "WCSB2C", a value of "201" would represent the logical store within WCS Reference store
+For applicationID: "SAP", a value of "100" would represent the client instance within SAP.
+For applicationID: "MDM", a value of "10" would represent vendor logical division as "America".
+
+</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="systemLocationID" type="xsd:string" minOccurs="0"
+               maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="partnerID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A unique identification of the partner.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="priorityCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Enables the sending application to indicate the priority of the event or task that caused the BOD to be created.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+  <xsd:group name="ItemIDSet">
+    <xsd:annotation>
+      <xsd:documentation>Set of alternate identifiers for a specific VF style/color/size</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="vfc:enterpriseItemID" minOccurs="0"/>
+      <xsd:element ref="vfc:supplierItemID" minOccurs="0"/>
+      <xsd:element name="customerItemID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Is the identifier provided by the customer for the item</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="upcID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Allows an instance of an item to have a UPC(Universal Product Code) identifier associated.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="epcID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>ELECTRONIC PRODUCT CODE - Represents a unique instance of a UPC, typically used in RFID implementations</xsd:documentation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">Allows an instance of an item to communicate the ElectronicProductCodeID that it was assigned. The ElectronicProductCodeID is one of the major RadioFrequency Identifiers used.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="skuID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The unique Data Governance identifier for a specific VF style/color/size/category within VF's system.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="articleID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>SAP representation of an item</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="serialID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This ID is very similar to the epcID in that it represents a unique instance of an item.  
+For example:
+1. A unique "upcID" can have many different "serialIDs" 
+2. GiftCard serial ID</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="expirationDateTime"/>
+              <xsd:attribute name="issueDateTime"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:group name="OrderQuantitySet">
+    <xsd:sequence>
+      <xsd:element name="requestedQuantity" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the requested quantity to be shipped for the order in the UOM specified.
+
+requestedQuantity = shippedQuantity + cancelledQuantity</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="shippedQuantity" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the shipped quantity for the order in the UOM specified.
+
+This represents the actual quantity that was shipped.
+
+requestedQuantity = shippedQuantity + cancelledQuantity</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cancelledQuantity" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the cancelled quantity for the order in the UOM specified.
+
+If the Distribution Facility could not find the items in stock, this represents the quantity that the original requested quantity was reduced by.
+
+requestedQuantity = shippedQuantity + cancelledQuantity</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="returnedQuantity" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This is the returned quantity for the order in the UOM specified.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="receivedQuantity" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+              <xsd:attribute name="uomCode" type="xsd:string"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:group name="OrderIDSet">
+    <xsd:annotation>
+      <xsd:documentation>Set of related order identifiers for a sales orders.  Some of them are alias order numbers from other systems and some are related orders, such as contracts.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="vfc:applicationOrderID" minOccurs="0"/>
+      <xsd:element ref="vfc:alternateOrderID" minOccurs="0"/>
+      <xsd:element name="consumerOrderID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Order number by which the consumer knows the order from a VF customer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="vfc:customerOrderID" minOccurs="0"/>
+      <xsd:element ref="vfc:enterpriseOrderID" minOccurs="0"/>
+      <xsd:element ref="vfc:customerContractOrderID" minOccurs="0"/>
+      <xsd:element name="uniqueOrderID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This order ID uniquely identifies an Order across a wide range of criteria. (i.e. multiple applications, time, channels,etc).</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:complexType name="OnlineOrder">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="orderHeader" type="vfc:OnlineOrderHeader" minOccurs="0"/>
+      <xsd:element name="orderLine" type="vfc:OnlineOrderLine" minOccurs="0"
+         maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ApplicationArea">
+    <xsd:all>
+      <xsd:element name="sender" type="vfc:ContextHeader" minOccurs="0"/>
+      <xsd:element name="receiver" type="vfc:ContextHeader" minOccurs="0"/>
+      <xsd:element name="creationDateTime" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">is the date time stamp that the given instance of the Business Object Document was created.  This date must not be modified during the life of the Business Object Document.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="signature" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">If the BOD is to be signed the signature element is included, otherwise it is not.
+Signature supports any digital signature that maybe used by an implementation of OAGIS. The qualifyingAgency identifies the agency that provided the format for the signature.
+
+This element supports any digital signature specification that is available today and in the future. This is accomplished by not actually defining the content but by allowing the implementation to specify the digital signature to be used via an external XML Schema namespace declaration. The Signature element is defined to have any content from any other namespace. 
+
+This allows the user to carry a digital signature in the xml instance of a BOD. The choice of which digital signature to use is left up to the user and their integration needs.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="bodID" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation source="http://www.openapplications.org/platform/1">The BODId provides a place to carry a Globally Unique Identifier (GUID) that will make each Business Object Document instance uniquely identifiable.
+
+This is a critical success factor to enable software developers to use the Globally Unique Identifier (GUID) to build the following services or capabilities:
+1. Legally binding transactions,
+2. Transaction logging,
+3. Exception handling,
+4. Re-sending,
+5. Reporting,
+6. Confirmations,
+7. Security.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="service" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>it represents name of the service.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CurrencyExchangeRate"/>
+            <xsd:enumeration value="CustomerMaster"/>
+            <xsd:enumeration value="ItemMaster"/>
+            <xsd:enumeration value="Invoice"/>
+            <xsd:enumeration value="JournalEntry"/>
+            <xsd:enumeration value="MoveInventory"/>
+            <xsd:enumeration value="PurchaseRequisition"/>
+            <xsd:enumeration value="PurchaseOrder"/>
+            <xsd:enumeration value="OnlineOrder"/>
+            <xsd:enumeration value="ReceiveReturn"/>
+            <xsd:enumeration value="ReceiveDelivery"/>
+            <xsd:enumeration value="RemittanceAdvice"/>
+            <xsd:enumeration value="Shipment"/>
+            <xsd:enumeration value="TransactionLog"/>
+            <xsd:enumeration value="VendorMaster"/>
+            <xsd:enumeration value="WarehouseOrder"/>
+            <xsd:enumeration value="SalesOrder"/>
+            <xsd:enumeration value="Payable"/>
+            <xsd:enumeration value="WorkerMaster"/>
+            <xsd:enumeration value="WorkerTime"/>
+            <xsd:enumeration value="ConsumerAccount"/>
+            <xsd:enumeration value="RetailOrder"/>
+            <xsd:enumeration value="AbandonCart"/>
+            <xsd:enumeration value="Promotion"/>
+            <xsd:enumeration value="ArticleMaster"/>
+            <xsd:enumeration value="InboundShipment"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="operation" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Operation for capability offered by the Service</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="acknowledge"/>
+            <xsd:enumeration value="change"/>
+            <xsd:enumeration value="confirm"/>
+            <xsd:enumeration value="notify"/>
+            <xsd:enumeration value="process"/>
+            <xsd:enumeration value="request"/>
+            <xsd:enumeration value="respond"/>
+            <xsd:enumeration value="load"/>
+            <xsd:enumeration value="sync"/>
+            <xsd:enumeration value="update"/>
+            <xsd:enumeration value="get"/>
+            <xsd:enumeration value="post"/>
+            <xsd:enumeration value="cancel"/>
+            <xsd:enumeration value="confirm"/>
+            <xsd:enumeration value="validate"/>
+            <xsd:enumeration value="create"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="version" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="userData" type="vfc:UserData" minOccurs="0"/>
+      <xsd:element name="contextData" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="contextDataField" minOccurs="0" maxOccurs="unbounded">
+              <xsd:annotation>
+                <xsd:documentation>This repeating element is used to store meaningful values by service verb/noun for use in contextual searching within the Commen Event Framework (CEF)</xsd:documentation>
+              </xsd:annotation>
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                    <xsd:attribute name="name"/>
+                  </xsd:extension>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createdByUserID" type="xsd:string" minOccurs="0"/>
+    </xsd:all>
+  </xsd:complexType>
+  <xsd:element name="cancelOnlineOrder">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="applicationArea" type="vfc:ApplicationArea"/>
+        <xsd:element name="dataArea">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="onlineOrder" type="vfc:OnlineOrder" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="updateOnlineOrder">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="applicationArea" type="vfc:ApplicationArea"/>
+        <xsd:element name="dataArea">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="onlineOrder" type="vfc:OnlineOrder" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="notifyOnlineOrder">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="applicationArea" type="vfc:ApplicationArea"/>
+        <xsd:element name="dataArea">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="onlineOrder" type="vfc:OnlineOrder" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="processOnlineOrder">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="applicationArea" type="vfc:ApplicationArea"/>
+        <xsd:element name="dataArea">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="onlineOrder" type="vfc:OnlineOrder" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="acknowledgeOnlineOrder">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="applicationArea" type="vfc:ApplicationArea"/>
+        <xsd:element name="dataArea">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="onlineOrder" type="vfc:OnlineOrder" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="giftOrderInd" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>An indicator that represents if an order is being given as a gift.
+
+Acceptable values: Y or N</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="inventoryChannel" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Identifies whether the inventory is wholesale or retail.
+</xsd:documentation>
+      <xsd:documentation/>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="orderShippingTotal" type="vfc:OrderAmounts"/>
+  <xsd:element name="manifestID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>A unique identifier for a transport document from a carrier that lists all the bills of lading for a particular vessel or voyage.
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="alternateOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Represents an alternate order id from within application that created the order
+
+Examples:
+
+Application    Alternate Order ID
+GSI            Order ID created by back-office portion of application that needs to be communicated back on all integration
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="carrierID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Shipping carrier identfication.  VF determines this value
+
+Possible Examples:
+FDX
+UPS
+PUR</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="orderTotal" type="vfc:OrderAmounts">
+    <xsd:annotation>
+      <xsd:documentation>This is the total amount of the order (inclusive of all charges, tax etc) or grand total of all items in batch.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="orderSourceCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>A code which represents where a sales order originated.
+
+Examples for sales orders are:
+"0080" JC Penney Contract
+"1001" 3POINT5
+"1006" Centerstone
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="volume">
+    <xsd:annotation>
+      <xsd:documentation>The three-dimensional measurement of space contained within by an object in a given unit of measure.by </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="uomCode" type="xsd:string"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="currencyCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>A unique ISO identifier for a particular monetary unit.
+
+Currency code as defined by the "ISO 4217" for all "money" amounts in this BOD.</xsd:documentation>
+      <xsd:documentation>Enumerated values from Currency_XXX table. If the user does not specify any then the default value is USD.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="referenceOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique number assigned to the authorization of the transaction in the back office.
+This number must be re-used when placing the order for reference purposes.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="uomCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>A unique identifier for a particular unit of measure.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="itemCatalogID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>This is the catalog id that the item is currently associated with.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="height">
+    <xsd:annotation>
+      <xsd:documentation>The linear height of a handling unit in the given unit of measure.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="uomCode" type="xsd:string"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="customerOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique identifier for a sales order as supplied by the customer.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="billOfLadingID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique identifier for a legal document between the shipper of goods and their carrier detailing the type, quantity and destination of the goods.The bill of lading also serves as a receipt of shipment when the goods are delivered to the predetermined destination. This document must accompany the shipped goods, no matter the form of transportation, and must be signed by an authorized representative from the carrier, shipper and receiver. </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="enterpriseItemID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique identifier for a specific VF style/color/size/category within VF's system.
+
+Format Breakdown:
+BB:SSSSSS:CCC:DIM1:DIM1:Q:P
+
+BB - Brand code (ex: NF, VN, LU, EC, RF, TB, SW)
+
+SSSSSS - Style, This will be the style component of current VF brands right justified and padded with zeros.
+
+CCC - Color code is always 3 bytes
+
+DIM1 - Size dimension 1
+
+DIM2 - Size dimension 2
+
+Q - Represents the quality of the item and is the 1st character of the stock category (The default for this component of the enterpriseItemID is 1 = FirstQuality)
+	1 = First Quality
+	2 = Irregular Quality
+	S = Sample
+	L = Left Foot Sample
+	R = Right Foot Sample
+
+P - Pre-pack indicator, this value will always be a 'P'
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="priorityCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Indicates the priority or urgency of the associated entity.
+
+The following is contextual information for documentation purposes, that probably should be removed:
+
+When used in context of a OnlineOrder/WarehouseShippingOrder, this field will be adapted from SAP, IP, and ECOM field to our WMS standard which is a 1 digit field
+(1-9)
+
+Need lookup table:
+
+Shipping context Examples:
+
+IP value     priorityCode (shipping context)
+'R'-rush          1
+'N'-normal        7</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="retailStoreID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>This identifier represents a specific VF retail store.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="customerContractOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique identifier for the originating non-shippable contract order for this sales order.
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="width">
+    <xsd:annotation>
+      <xsd:documentation>The linear width of a handling unit in the given unit of measure.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="uomCode" type="xsd:string"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="enterpriseOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>A unique identifier for a sales order within VF's order management system
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="payMethodName" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Represents the description of the payment method code (paymentMethodCode)
+
+Examples:
+Master Card, American Express, Paypal, VISA, Store Credit</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="amount">
+    <xsd:annotation>
+      <xsd:documentation>Amount within the element's context.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="currencyCode"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="taxJurisdictionCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Set of identifiers for particular tax jurisdictions which are used to determine sales tax rates.
+</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="supplierItemID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Is the identifier provided by the supplier for the item.</xsd:documentation>
+      <xsd:documentation source="http://www.openapplications.org/platform/1">Is the identifier provided by the supplier for the item.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="neverOutInd" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>This indicator is used for the "never out" process.  This indicator is typically used for VF retail stores allowing them to identify that one or more items on an orders are considered "core business items" that must always be in stock. This indicator will be used to tell the DC that this order MUST process and ship the same day it is received.
+
+This field will be a 'Y' or 'N'</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="customerOrderDate" type="xsd:dateTime">
+    <xsd:annotation>
+      <xsd:documentation>The date and time for the sales order sent by the customer.
+
+Customer Purchase Order Date</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="customerVendorID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>The unique identifier for VF or a VF business as a vendor in a customer's system.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="length">
+    <xsd:annotation>
+      <xsd:documentation>The linear length of a handling unit in the given unit of measure.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="uomCode" type="xsd:string"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="weight">
+    <xsd:annotation>
+      <xsd:documentation>The measurement of heaviness of a particular object in a given unit of measure.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attribute name="uomCode" type="xsd:string"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="applicationOrderID" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Represents a unique order id from within application that created the order
+
+Examples:
+
+Application    Order ID
+WCS-VANS       WCS unique order id
+IP-TNF         Distro number + Retail Store Location
+SAP            Delivery number</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="transportationMethodCode" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>Identifies the general type of carrier transportation used to deliver goods.
+
+Possible Examples: (LTL,TL,Package) or (Motor, Air, Rail, Package)</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+</xsd:schema>
