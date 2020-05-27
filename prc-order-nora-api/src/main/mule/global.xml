@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<error-handler name="globalError_Handler" doc:id="d6ab387a-717a-4b19-bcaa-18f09f7b6932" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="404 On Error Propagate" doc:id="714145c0-bd87-4634-84df-c08859b05a54" type="HTTP:NOT_FOUND">
+			<ee:transform doc:name="Transform Message" doc:id="dd84f471-c61c-43e5-8511-80c766b65ef5" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 404,
+  Name: "NOT FOUND",
+  Message: "The server has not found anything matching the Request-URI. ",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="31d60192-1a1a-4b55-8eb2-ef0220dd8051" message="#[payload]"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="500 On Error Propagate" doc:id="62bc02b3-28de-472b-9017-11facdbe4582" type="HTTP:INTERNAL_SERVER_ERROR">
+			<ee:transform doc:name="Transform Message" doc:id="2355929f-12c7-4d84-87ce-c5e145163fd7" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 500,
+  Name: "Internal Server Error",
+  Message: "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="2f4ddc9d-e643-4cf3-ab11-2b4858d98fc2" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="400 On Error Propagate" doc:id="9e83ce77-31db-408b-88f5-f61c7b186838" type="HTTP:BAD_REQUEST">
+			<ee:transform doc:name="Transform Message" doc:id="eb7598d2-7d22-4d3d-8c37-c253b9f443cf" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 400,
+  Name: "Bad request",
+  Message: "The request could not be understood by the server due to malformed syntax.",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="68b5081a-5597-472b-9fa5-d360694d8ab2" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="415 On Error Propagate" doc:id="c7d50c7e-04a9-4ce1-83d4-3d5a77db0cb8" type="HTTP:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Transform Message" doc:id="83e7200c-b41b-4ef4-ab82-93275d9c72b5" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 415,
+  Name: "Unsupported Media Type",
+  Message: "Request format is not supported by Server.",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="7da73849-f9a1-4189-b845-653fd8cb339b" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="406 On Error Propagate" doc:id="96c74490-6633-4b1b-8438-31611a0f53ea" type="HTTP:NOT_ACCEPTABLE">
+			<ee:transform doc:name="Transform Message" doc:id="739782a7-45a5-463a-92b2-4389efa4e55e" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 406,
+  Name: "Not Acceptable",
+  Message: "Cannot accept request type. Please Retry again later.",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="a1f56e13-2875-4789-aa26-9473eeb06259" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="405 On Error Propagate" doc:id="3cd573c5-1292-4b5d-9792-41a02fcd83c0" type="HTTP:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Transform Message" doc:id="777e5593-f0f7-4f37-8dc0-9997ff69d1fe" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  ErrorCode: 405,
+  Name: "Method Not Allowed",
+  Message: "The server has not implemented the requested HTTP method.",
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="e1e91065-5b2b-452b-b375-52389409ce2d" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="HTTP Other Errors " doc:id="811312bb-baea-4163-99b0-8c1248bfbc44" when="#[error.erroType.namespace == 'HTTP']">
+			<ee:transform doc:name="Transform Message" doc:id="992a5b50-f6eb-46d8-a4c3-d1ec65984877" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="661feb12-69d5-46f4-9fad-e775a4ab5128" message="#[payload]" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="df690343-d44f-46db-9d15-0fff7090f011" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="1ba1b12d-cbc0-4fe8-992c-1b2e83ff9fef" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  Errortype : error.errorType.identifier,
+  Errordescription : error.description,
+  Cause : error.cause.info,
+  errorMessage : error.errorMessage.payload.error
+	
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="1ebee721-82ad-43c4-95c7-e30fcd4bf43a" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+</mule>
