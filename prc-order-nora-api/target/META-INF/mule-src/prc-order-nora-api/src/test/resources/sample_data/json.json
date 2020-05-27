@@ -1,0 +1,173 @@
+ {
+      "clientID": "00016001",
+      "company_code": "",
+      "country_Code": "US",
+      "brandID": "LE",
+      "creationDateTime": "2020-03-10T11:45:02.740Z",
+      "changeDateTime": "2020-03-10T11:45:04.676Z",
+      "alternateOrderID": "20002818",
+      "customerOrderID": "20002818",
+      "giftOrderInd": "N",
+      "Orderamount": 181.15,
+      "currencyCode": "USD",
+      "OrderItemamount": 155.94,
+      "discountAmount": 9.36,
+      "OrdersalesTaxAmount": 10.26,
+      "customer_info": {
+        "phone": "3366869621",
+        "email": "kirthika_ramachandran@vfc.com"
+      },
+      "adjustments": {
+        "adustmentAmount": 9.36
+      },
+      "shipping_adress": {
+        "Shipmentamount": 14.95,
+        "adr1": "700 Franklin St",
+        "city": "Shoemakersville",
+        "country": "US",
+        "zip": "19555-1619",
+        "ShipmemntsalesTaxAmount": 0.90
+      },
+      "paymentInfo": {
+        "payMethodName": "Mastercard",
+        "billingContact": {
+          "Contactid": "00016001",
+          "givenName": "Kirthika",
+          "familyName": "R",
+          "email": "kirthika_ramachandran@vfc.com",
+          "phone": "3366869621",
+          "address": {
+            "addressLine1": "700 Franklin St",
+            "cityName": "Shoemakersville",
+            "stateProvinceCode": "PA",
+            "postalCode": "19555-1619"
+          }
+        },
+        "payMethodCode": "MC",
+        "payMethodType": "CC",
+        "requestedDeliveryDate": "customer_info",
+        "customerCancelDate": "",
+        "paymentID": "e8bd72bc4aef05043632acb617",
+        "accountSuffix": "0002",
+        "authorizationAmount": "18115.0",
+        "authorizationCode": "883583840703118E"
+      },
+      "orderLine": [
+        {
+          "lineID": "d5ab4756e8823d5dbd5fe27bef",
+          "partNumber": "5183147:4:R",
+          "upcID": "191056713942",
+          "requestedQuantity": "2",
+          "retailAmount": 48.00,
+          "sellingAmount": 24.00,
+          "discountAmount": -24.00,
+          "shippingamount": 14.95,
+          "salesTaxAmount": 1.44,
+		  "profitCenter" : "L",
+		  "totalAfterPromotion" : 12.0,
+          "shippingContact": {
+            "name": {
+              "title": "Kirthika R",
+              "familyName": "R",
+              "givenName": "Kirthika"
+            },
+            "address": {
+              "addressLine1": "700 Franklin St",
+              "cityName": "Shoemakersville",
+              "stateProvinceCode": "PA",
+              "countryCode": "US",
+              "postalCode": "19555-1619"
+            },
+            "phoneNumber1": "3366869621",
+            "emailAddressCommunication": "k"
+          },
+          "shippingMode": {
+            "carrierServiceLevelName": "Only ship to physical address (exclude AK, HI)",
+            "carrierID": "express",
+            "serviceLevelCode": "express"
+          },
+          "vas": {
+            "code": "express",
+            "description": "Only ship to physical address (exclude AK, HI)"
+          },
+          "giftLineInd": "N",
+          "adjCode": "ProductDiscount50",
+          "adjDescription": "ProductDiscount50",
+          "adjType": "price_adjustment"
+        },
+        {
+          "lineID": "fb7629d5f9909491030312d51e",
+          "partNumber": "130G186:4:P",
+          "upcID": "051071002684",
+          "requestedQuantity": "6",
+          "retailAmount": 131.94,
+          "sellingAmount": 131.94,
+          "salesTaxAmount": 7.92,
+		  "profitCenter" : "D",
+		  "totalAfterPromotion" : 21.99,
+          "shippingContact": {
+            "name": {
+              "title": "Kirthika R",
+              "familyName": "R",
+              "givenName": "Kirthika"
+            },
+            "address": {
+              "addressLine1": "700 Franklin St",
+              "cityName": "Shoemakersville",
+              "stateProvinceCode": "PA",
+              "countryCode": "US",
+              "postalCode": "19555-1619"
+            },
+            "phoneNumber1": "3366869621",
+            "emailAddressCommunication": "k"
+          },
+          "shippingMode": {
+            "carrierServiceLevelName": "Only ship to physical address (exclude AK, HI)",
+            "carrierID": "express",
+            "serviceLevelCode": "express"
+          },
+          "vas": {
+            "code": "express",
+            "description": "Only ship to physical address (exclude AK, HI)"
+          },
+          "giftLineInd": "N"
+        },
+		{
+          "lineID": "fb7629d5f9909491030312d51e",
+          "partNumber": "130G186:4:P",
+          "upcID": "051071002684",
+          "requestedQuantity": "6",
+          "retailAmount": 131.94,
+          "sellingAmount": 131.94,
+          "salesTaxAmount": 7.92,
+		  "profitCenter" : "D",
+		  "totalAfterPromotion" : 21.99,
+          "shippingContact": {
+            "name": {
+              "title": "Kirthika R",
+              "familyName": "R",
+              "givenName": "Kirthika"
+            },
+            "address": {
+              "addressLine1": "700 Franklin St",
+              "cityName": "Shoemakersville",
+              "stateProvinceCode": "PA",
+              "countryCode": "US",
+              "postalCode": "19555-1619"
+            },
+            "phoneNumber1": "3366869621",
+            "emailAddressCommunication": "k"
+          },
+          "shippingMode": {
+            "carrierServiceLevelName": "Only ship to physical address (exclude AK, HI)",
+            "carrierID": "express",
+            "serviceLevelCode": "express"
+          },
+          "vas": {
+            "code": "express",
+            "description": "Only ship to physical address (exclude AK, HI)"
+          },
+          "giftLineInd": "N"
+        }
+      ]
+    }
