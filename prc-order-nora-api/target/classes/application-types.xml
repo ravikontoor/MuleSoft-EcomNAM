@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="VFCMOrderxml" format="xml">
+      <types:example format="xml" element="{http://www.vfc.com/esb/OnlineOrder/1}processOnlineOrder" location="examples/sample.xml"/>
+    </types:type>
+    <types:type name="OrderCanonical" format="json">
+      <types:shape format="weave" example="examples/Order_details_cann-1.txt"><![CDATA[%dw 2.0
+
+type OrderCanonical = {|
+  Order: {|
+    clientID: String, 
+    company_code: String, 
+    country_Code: String, 
+    brandID: String, 
+    creationDateTime: String, 
+    changeDateTime: String, 
+    alternateOrderID: String, 
+    customerOrderID: String, 
+    giftOrderInd: String, 
+    Orderamount: Number {"typeId": "int"}, 
+    currencyCode: String, 
+    OrderItemamount: Number {"typeId": "int"}, 
+    discountAmount: Number {"typeId": "int"}, 
+    OrdersalesTaxAmount: Number {"typeId": "int"}, 
+    vas: {|
+      code: String, 
+      description: String
+    |}, 
+    adjustments: {|
+      adustmentType: String, 
+      adustmentCode: String, 
+      adustmentescription: String, 
+      adustmentAmount: Number {"typeId": "int"}
+    |}, 
+    shipping_adress: {|
+      dropoffpoint_id: String, 
+      notification_type: String, 
+      booking_code: String, 
+      Shipmentamount: Number {"typeId": "int"}, 
+      adr1: String, 
+      city: String, 
+      country: String, 
+      zip: String, 
+      ShipmemntsalesTaxAmount: Number {"typeId": "int"}
+    |}, 
+    recipient: {|
+      carrier_code: String, 
+      delivery_rule: String, 
+      delivery_information: String
+    |}, 
+    paymentInfo: {|
+      authorizationAmount: Number {"typeId": "int"}, 
+      payMethodName: String, 
+      authorizationCode: String, 
+      accountSuffix: String, 
+      billingContact: {|
+        Contactid: String, 
+        givenName: String, 
+        familyName: String, 
+        email: String, 
+        phone: String, 
+        address: {|
+          addressLine1: String, 
+          addressLine2: String, 
+          cityName: String, 
+          stateProvinceCode: String, 
+          countryCode: String, 
+          postalCode: String
+        |}
+      |}, 
+      payMethodCode: String, 
+      payMethodType: String, 
+      requestedDeliveryDate: String, 
+      customerCancelDate: String
+    |}, 
+    orderLine: {|
+      lineID: String, 
+      partNumber: String, 
+      upcID: String, 
+      requestedQuantity: String, 
+      retailAmount: Number {"typeId": "int"}, 
+      sellingAmount: Number {"typeId": "int"}, 
+      discountAmount: String, 
+      shippingamount: Number {"typeId": "int"}, 
+      salesTaxAmount: Number {"typeId": "int"}, 
+      shippingContact: {|
+        name: {|
+          nickName: String, 
+          title: String, 
+          familyName: String, 
+          givenName: String, 
+          middleName: String
+        |}, 
+        address: {|
+          addressLine1: String, 
+          addressLine2: String, 
+          addressLine3: String, 
+          cityName: String, 
+          stateProvinceCode: String, 
+          countryCode: String, 
+          postalCode: String, 
+          attentionOfName: String
+        |}, 
+        phoneNumber1: String, 
+        phoneNumber2: String, 
+        emailAddressCommunication: String
+      |}, 
+      shippingMode: {|
+        carrierServiceLevelName: String, 
+        carrierID: String, 
+        serviceLevelCode: String
+      |}, 
+      vas: {|
+        code: String, 
+        description: String
+      |}, 
+      giftLineInd: String, 
+      gift: {|
+        wrapUnitPriceAmount: String, 
+        wrapSalesTaxAmount: String
+      |}
+    |}
+  |}
+|} {"example": "{\"Order\":{\"clientID\":\"\",\"company_code\":\"\",\"country_Code\":\"\",\"brandID\":\"\",\"creationDateTime\":\"\",\"changeDateTime\":\"\",\"alternateOrderID\":\"\",\"customerOrderID\":\"\",\"giftOrderInd\":\"\",\"Orderamount\":0,\"currencyCode\":\"\",\"OrderItemamount\":0,\"discountAmount\":0,\"OrdersalesTaxAmount\":0,\"vas\":{\"code\":\"\",\"description\":\"\"},\"adjustments\":{\"adustmentType\":\"\",\"adustmentCode\":\"\",\"adustmentescription\":\"\",\"adustmentAmount\":0},\"shipping_adress\":{\"dropoffpoint_id\":\"\",\"notification_type\":\"\",\"booking_code\":\"\",\"Shipmentamount\":0,\"adr1\":\"\",\"city\":\"\",\"country\":\"\",\"zip\":\"\",\"ShipmemntsalesTaxAmount\":0},\"recipient\":{\"carrier_code\":\"\",\"delivery_rule\":\"\",\"delivery_information\":\"\"},\"paymentInfo\":{\"authorizationAmount\":0,\"payMethodName\":\"\",\"authorizationCode\":\"\",\"accountSuffix\":\"\",\"billingContact\":{\"Contactid\":\"\",\"givenName\":\"\",\"familyName\":\"\",\"email\":\"\",\"phone\":\"\",\"address\":{\"addressLine1\":\"\",\"addressLine2\":\"\",\"cityName\":\"\",\"stateProvinceCode\":\"\",\"countryCode\":\"\",\"postalCode\":\"\"}},\"payMethodCode\":\"\",\"payMethodType\":\"\",\"requestedDeliveryDate\":\"\",\"customerCancelDate\":\"\"},\"orderLine\":{\"lineID\":\"\",\"partNumber\":\"\",\"upcID\":\"\",\"requestedQuantity\":\"\",\"retailAmount\":0,\"sellingAmount\":0,\"discountAmount\":\"\",\"shippingamount\":0,\"salesTaxAmount\":0,\"shippingContact\":{\"name\":{\"nickName\":\"\",\"title\":\"\",\"familyName\":\"\",\"givenName\":\"\",\"middleName\":\"\"},\"address\":{\"addressLine1\":\"\",\"addressLine2\":\"\",\"addressLine3\":\"\",\"cityName\":\"\",\"stateProvinceCode\":\"\",\"countryCode\":\"\",\"postalCode\":\"\",\"attentionOfName\":\"\"},\"phoneNumber1\":\"\",\"phoneNumber2\":\"\",\"emailAddressCommunication\":\"\"},\"shippingMode\":{\"carrierServiceLevelName\":\"\",\"carrierID\":\"\",\"serviceLevelCode\":\"\"},\"vas\":{\"code\":\"\",\"description\":\"\"},\"giftLineInd\":\"\",\"gift\":{\"wrapUnitPriceAmount\":\"\",\"wrapSalesTaxAmount\":\"\"}}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="JBAORder" format="xml">
+      <types:example format="xml" element="orders" location="examples/L_RO_LOGISTICS_LPL91000117715_20190813143503.XML"/>
+    </types:type>
+    <types:type name="OrderCanonical1" format="json">
+      <types:shape format="weave" example="examples/OrderCanon1-1.json"><![CDATA[%dw 2.0
+
+type OrderCanonical1 = {|
+  clientID: String, 
+  company_code: String, 
+  country_Code: String, 
+  brandID: String, 
+  creationDateTime: String, 
+  changeDateTime: String, 
+  alternateOrderID: String, 
+  customerOrderID: String, 
+  giftOrderInd: String, 
+  Orderamount: Number {"typeId": "double"}, 
+  currencyCode: String, 
+  OrderItemamount: Number {"typeId": "double"}, 
+  discountAmount: Number {"typeId": "double"}, 
+  OrdersalesTaxAmount: Number {"typeId": "double"}, 
+  customer_info: {|
+    phone: String, 
+    email: String
+  |}, 
+  adjustments: {| adustmentAmount: Number {"typeId": "double"} |}, 
+  shipping_adress: {|
+    Shipmentamount: Number {"typeId": "double"}, 
+    adr1: String, 
+    city: String, 
+    country: String, 
+    zip: String, 
+    ShipmemntsalesTaxAmount: Number {"typeId": "double"}
+  |}, 
+  paymentInfo: {|
+    payMethodName: String, 
+    billingContact: {|
+      Contactid: String, 
+      givenName: String, 
+      familyName: String, 
+      email: String, 
+      phone: String, 
+      address: {|
+        addressLine1: String, 
+        cityName: String, 
+        stateProvinceCode: String, 
+        postalCode: String
+      |}
+    |}, 
+    payMethodCode: String, 
+    payMethodType: String, 
+    requestedDeliveryDate: String, 
+    customerCancelDate: String, 
+    paymentID: String, 
+    accountSuffix: String, 
+    authorizationAmount: String, 
+    authorizationCode: String
+  |}, 
+  orderLine: Array<{|    lineID: String,     partNumber: String,     upcID: String,     requestedQuantity: String,     retailAmount: Number {"typeId": "double"},     sellingAmount: Number {"typeId": "double"},     discountAmount: Number {"typeId": "double"},     shippingamount: Number {"typeId": "double"},     salesTaxAmount: Number {"typeId": "double"},     profitCenter: String,     totalAfterPromotion: Number {"typeId": "double"},     shippingContact: {|      name: {|        title: String,         familyName: String,         givenName: String      |},       address: {|        addressLine1: String,         cityName: String,         stateProvinceCode: String,         countryCode: String,         postalCode: String      |},       phoneNumber1: String,       emailAddressCommunication: String    |},     shippingMode: {|      carrierServiceLevelName: String,       carrierID: String,       serviceLevelCode: String    |},     vas: {|      code: String,       description: String    |},     giftLineInd: String,     adjCode: String,     adjDescription: String,     adjType: String  |}>
+|} {"example": "{\"clientID\":\"00016001\",\"company_code\":\"\",\"country_Code\":\"US\",\"brandID\":\"LE\",\"creationDateTime\":\"2020-03-10T11:45:02.740Z\",\"changeDateTime\":\"2020-03-10T11:45:04.676Z\",\"alternateOrderID\":\"20002818\",\"customerOrderID\":\"20002818\",\"giftOrderInd\":\"N\",\"Orderamount\":181.15,\"currencyCode\":\"USD\",\"OrderItemamount\":155.94,\"discountAmount\":9.36,\"OrdersalesTaxAmount\":10.26,\"customer_info\":{\"phone\":\"3366869621\",\"email\":\"kirthika_ramachandran@vfc.com\"},\"adjustments\":{\"adustmentAmount\":9.36},\"shipping_adress\":{\"Shipmentamount\":14.95,\"adr1\":\"700 Franklin St\",\"city\":\"Shoemakersville\",\"country\":\"US\",\"zip\":\"19555-1619\",\"ShipmemntsalesTaxAmount\":0.90},\"paymentInfo\":{\"payMethodName\":\"Mastercard\",\"billingContact\":{\"Contactid\":\"00016001\",\"givenName\":\"Kirthika\",\"familyName\":\"R\",\"email\":\"kirthika_ramachandran@vfc.com\",\"phone\":\"3366869621\",\"address\":{\"addressLine1\":\"700 Franklin St\",\"cityName\":\"Shoemakersville\",\"stateProvinceCode\":\"PA\",\"postalCode\":\"19555-1619\"}},\"payMethodCode\":\"MC\",\"payMethodType\":\"CC\",\"requestedDeliveryDate\":\"customer_info\",\"customerCancelDate\":\"\",\"paymentID\":\"e8bd72bc4aef05043632acb617\",\"accountSuffix\":\"0002\",\"authorizationAmount\":\"18115.0\",\"authorizationCode\":\"883583840703118E\"},\"orderLine\":[{\"lineID\":\"d5ab4756e8823d5dbd5fe27bef\",\"partNumber\":\"5183147:4:R\",\"upcID\":\"191056713942\",\"requestedQuantity\":\"2\",\"retailAmount\":48.00,\"sellingAmount\":24.00,\"discountAmount\":-24.00,\"shippingamount\":14.95,\"salesTaxAmount\":1.44,\"profitCenter\":\"L\",\"totalAfterPromotion\":12.0,\"shippingContact\":{\"name\":{\"title\":\"Kirthika R\",\"familyName\":\"R\",\"givenName\":\"Kirthika\"},\"address\":{\"addressLine1\":\"700 Franklin St\",\"cityName\":\"Shoemakersville\",\"stateProvinceCode\":\"PA\",\"countryCode\":\"US\",\"postalCode\":\"19555-1619\"},\"phoneNumber1\":\"3366869621\",\"emailAddressCommunication\":\"k\"},\"shippingMode\":{\"carrierServiceLevelName\":\"Only ship to physical address (exclude AK, HI)\",\"carrierID\":\"express\",\"serviceLevelCode\":\"express\"},\"vas\":{\"code\":\"express\",\"description\":\"Only ship to physical address (exclude AK, HI)\"},\"giftLineInd\":\"N\",\"adjCode\":\"ProductDiscount50\",\"adjDescription\":\"ProductDiscount50\",\"adjType\":\"price_adjustment\"},{\"lineID\":\"fb7629d5f9909491030312d51e\",\"partNumber\":\"130G186:4:P\",\"upcID\":\"051071002684\",\"requestedQuantity\":\"6\",\"retailAmount\":131.94,\"sellingAmount\":131.94,\"salesTaxAmount\":7.92,\"profitCenter\":\"D\",\"totalAfterPromotion\":21.99,\"shippingContact\":{\"name\":{\"title\":\"Kirthika R\",\"familyName\":\"R\",\"givenName\":\"Kirthika\"},\"address\":{\"addressLine1\":\"700 Franklin St\",\"cityName\":\"Shoemakersville\",\"stateProvinceCode\":\"PA\",\"countryCode\":\"US\",\"postalCode\":\"19555-1619\"},\"phoneNumber1\":\"3366869621\",\"emailAddressCommunication\":\"k\"},\"shippingMode\":{\"carrierServiceLevelName\":\"Only ship to physical address (exclude AK, HI)\",\"carrierID\":\"express\",\"serviceLevelCode\":\"express\"},\"vas\":{\"code\":\"express\",\"description\":\"Only ship to physical address (exclude AK, HI)\"},\"giftLineInd\":\"N\"}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#43f540f4-6028-490e-b20a-ff893d47efd0"/>
+  <types:enrichment select="#c8cbb957-cd5e-461b-b3bf-766292cfcc0c"/>
+  <types:enrichment select="#07794fd2-408a-41a2-b52e-ec97f5925bb2">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="OrderCanonical"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="VFCMOrderxml"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fc3f046a-be02-4863-b4e2-f43231170fb6"/>
+  <types:enrichment select="#4da1e11f-5fc3-4be0-a7fb-b83bf933c39f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="OrderCanonical1"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#4e0b8586-a64e-4d42-b4ba-53c6f8fed99a"/>
+  <types:enrichment select="#a89919dc-29e2-4990-ad86-88210dfe99ed"/>
+  <types:enrichment select="#e03fde91-5d4e-4328-ac67-0c0f96114a25"/>
+  <types:enrichment select="#654febe8-22dd-4f95-b784-97c07efdf817"/>
+  <types:enrichment select="#8d485d76-77fe-4013-8df3-19a6c3ec6e1c"/>
+</types:mule>
