@@ -1,0 +1,40 @@
+{
+  "configs": [
+    "global.xml",
+    "prc-order-nora-api.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:prc-order-nora-api:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.2.1",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [
+        "com.kontoorbrands"
+      ],
+      "exportedResources": [
+        "application-types.xml",
+        "config/api-dev-config.yaml",
+        "config/api-preprod-config.yaml",
+        "config/api-prod-config.yaml",
+        "config/api-qa-config.yaml",
+        "examples/L_RO_LOGISTICS_LPL91000117715_20190813143503.XML",
+        "examples/OrderCanon1-1.json",
+        "examples/OrderCanon1.json",
+        "examples/OrderData_canon.json",
+        "examples/Order_details_cann-1.txt",
+        "examples/VFCSMOrder.xml",
+        "global.xml",
+        "log4j2.xml",
+        "OnlineOrder.xsd",
+        "prc-order-nora-api.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
