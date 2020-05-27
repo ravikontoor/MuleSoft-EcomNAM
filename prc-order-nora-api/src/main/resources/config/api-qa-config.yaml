@@ -1,0 +1,55 @@
+###################################################################################
+#   List all the service configurations in this file (both SOAP & REST)
+###################################################################################
+ws:
+    sfccsapi:
+        host: "localhost"
+        port: "9051"
+    syswmb:
+        host: "localhost" 
+        port: "9013"
+    sftpsapi:
+        host: "localhost"
+        port: "9011"
+        Lee_dir_path: "/Lee/uploads/to_jba/"
+        Wra_dir_path: "/Wra/uploads/to_jba/"
+    order_lang:
+        'BE' : "FR"
+        'DE' : "DE"
+        'DK' : "EN"
+        'ES' : "ES"
+        'AT' : "DE"
+        'IE' : "EN"
+        'FR' : "FR"
+        'IT' : "IT"
+        'NL' : "NL"
+        'PL' : "PL"
+        'SE' : "EN"
+        'GB' : "EN"   
+    carrier_code_EMEA:
+        'ST-BE' : "G0"
+        'ST-DE' : "H0"
+        'ST-DK' : "G0"
+        'ST-ES' : "P0"
+        'ST-AT' : "G0"
+        'ST-IE' : "P0"
+        'ST-FR' : "C2"
+        'ST-IT' : "P0"
+        'ST-NL' : "G0"
+        'ST-PL' : "P0"
+        'ST-SE' : "P0"
+        'ST-GB' : "Y@"
+        'EX-BE' : "P2"
+        'EX-DE' : "H0"
+        'EX-DK' : "P2"
+        'EX-ES' : "P0"
+        'EX-AT' : "G0"
+        'EX-IE' : "P0"
+        'EX-FR' : "C2"
+        'ST-IT' : "P0"
+        'EX-NL' : "G0"
+        'EX-PL' : "P0"
+        'EX-SE' : "P0"
+        'EX-GB' : "Y@"
+        
+        
