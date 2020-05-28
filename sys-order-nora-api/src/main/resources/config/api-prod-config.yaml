@@ -1,0 +1,24 @@
+###################################################################################
+#   List all the service configurations in this file (both SOAP & REST)
+###################################################################################
+ws:
+ NORA:
+    dmandware:
+        host: "production-na01-kontoor.demandware.net"
+        port: "443"
+        basepath: "/s"
+        basepath2: "/dw"
+        username: "Api.sfcc.mule@kontoorbrands.com:<yQG4bpd.vaf"    
+        clientid: "c359a61f-abc9-470a-87a0-86be3c4646a6"
+        granttype: "urn:demandware:params:oauth:grant-type:client-id:dwsid:dwsecuretoken"        
+ http_config:
+        port : "9051"
+        host : "0.0.0.0"        
+ bearertoken:
+        host: "account.demandware.com"
+        port: "443"
+        basepath: "/dwsso"
+        granttype: "client_credentials"
+        clientid: "c359a61f-abc9-470a-87a0-86be3c4646a6"
+        password: 'd\_G<x`n8"q9'  
+ password: 'd\_G<x`n8"q9'     
