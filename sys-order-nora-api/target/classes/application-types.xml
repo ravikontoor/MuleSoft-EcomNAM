@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Order_detials_cann" format="json">
+      <types:shape format="weave" example="examples/Order_details_cann-1.txt"><![CDATA[%dw 2.0
+
+type Order_detials_cann = {|
+  Order: {|
+    clientID: String, 
+    company_code: String, 
+    country_Code: String, 
+    brandID: String, 
+    creationDateTime: String, 
+    changeDateTime: String, 
+    alternateOrderID: String, 
+    customerOrderID: String, 
+    giftOrderInd: String, 
+    Orderamount: Number {"typeId": "int"}, 
+    currencyCode: String, 
+    OrderItemamount: Number {"typeId": "int"}, 
+    discountAmount: Number {"typeId": "int"}, 
+    OrdersalesTaxAmount: Number {"typeId": "int"}, 
+    vas: {|
+      code: String, 
+      description: String
+    |}, 
+    adjustments: {|
+      adustmentType: String, 
+      adustmentCode: String, 
+      adustmentescription: String, 
+      adustmentAmount: Number {"typeId": "int"}
+    |}, 
+    shipping_adress: {|
+      dropoffpoint_id: String, 
+      notification_type: String, 
+      booking_code: String, 
+      Shipmentamount: Number {"typeId": "int"}, 
+      adr1: String, 
+      city: String, 
+      country: String, 
+      zip: String, 
+      ShipmemntsalesTaxAmount: Number {"typeId": "int"}
+    |}, 
+    recipient: {|
+      carrier_code: String, 
+      delivery_rule: String, 
+      delivery_information: String
+    |}, 
+    paymentInfo: {|
+      authorizationAmount: Number {"typeId": "int"}, 
+      payMethodName: String, 
+      authorizationCode: String, 
+      accountSuffix: String, 
+      billingContact: {|
+        Contactid: String, 
+        givenName: String, 
+        familyName: String, 
+        email: String, 
+        phone: String, 
+        address: {|
+          addressLine1: String, 
+          addressLine2: String, 
+          cityName: String, 
+          stateProvinceCode: String, 
+          countryCode: String, 
+          postalCode: String
+        |}
+      |}, 
+      payMethodCode: String, 
+      payMethodType: String, 
+      requestedDeliveryDate: String, 
+      customerCancelDate: String
+    |}, 
+    orderLine: {|
+      lineID: String, 
+      partNumber: String, 
+      upcID: String, 
+      requestedQuantity: String, 
+      retailAmount: Number {"typeId": "int"}, 
+      sellingAmount: Number {"typeId": "int"}, 
+      discountAmount: String, 
+      shippingamount: Number {"typeId": "int"}, 
+      salesTaxAmount: Number {"typeId": "int"}, 
+      shippingContact: {|
+        name: {|
+          nickName: String, 
+          title: String, 
+          familyName: String, 
+          givenName: String, 
+          middleName: String
+        |}, 
+        address: {|
+          addressLine1: String, 
+          addressLine2: String, 
+          addressLine3: String, 
+          cityName: String, 
+          stateProvinceCode: String, 
+          countryCode: String, 
+          postalCode: String, 
+          attentionOfName: String
+        |}, 
+        phoneNumber1: String, 
+        phoneNumber2: String, 
+        emailAddressCommunication: String
+      |}, 
+      shippingMode: {|
+        carrierServiceLevelName: String, 
+        carrierID: String, 
+        serviceLevelCode: String
+      |}, 
+      vas: {|
+        code: String, 
+        description: String
+      |}, 
+      giftLineInd: String, 
+      gift: {|
+        wrapUnitPriceAmount: String, 
+        wrapSalesTaxAmount: String
+      |}
+    |}
+  |}
+|} {"example": "{\"Order\":{\"clientID\":\"\",\"company_code\":\"\",\"country_Code\":\"\",\"brandID\":\"\",\"creationDateTime\":\"\",\"changeDateTime\":\"\",\"alternateOrderID\":\"\",\"customerOrderID\":\"\",\"giftOrderInd\":\"\",\"Orderamount\":0,\"currencyCode\":\"\",\"OrderItemamount\":0,\"discountAmount\":0,\"OrdersalesTaxAmount\":0,\"vas\":{\"code\":\"\",\"description\":\"\"},\"adjustments\":{\"adustmentType\":\"\",\"adustmentCode\":\"\",\"adustmentescription\":\"\",\"adustmentAmount\":0},\"shipping_adress\":{\"dropoffpoint_id\":\"\",\"notification_type\":\"\",\"booking_code\":\"\",\"Shipmentamount\":0,\"adr1\":\"\",\"city\":\"\",\"country\":\"\",\"zip\":\"\",\"ShipmemntsalesTaxAmount\":0},\"recipient\":{\"carrier_code\":\"\",\"delivery_rule\":\"\",\"delivery_information\":\"\"},\"paymentInfo\":{\"authorizationAmount\":0,\"payMethodName\":\"\",\"authorizationCode\":\"\",\"accountSuffix\":\"\",\"billingContact\":{\"Contactid\":\"\",\"givenName\":\"\",\"familyName\":\"\",\"email\":\"\",\"phone\":\"\",\"address\":{\"addressLine1\":\"\",\"addressLine2\":\"\",\"cityName\":\"\",\"stateProvinceCode\":\"\",\"countryCode\":\"\",\"postalCode\":\"\"}},\"payMethodCode\":\"\",\"payMethodType\":\"\",\"requestedDeliveryDate\":\"\",\"customerCancelDate\":\"\"},\"orderLine\":{\"lineID\":\"\",\"partNumber\":\"\",\"upcID\":\"\",\"requestedQuantity\":\"\",\"retailAmount\":0,\"sellingAmount\":0,\"discountAmount\":\"\",\"shippingamount\":0,\"salesTaxAmount\":0,\"shippingContact\":{\"name\":{\"nickName\":\"\",\"title\":\"\",\"familyName\":\"\",\"givenName\":\"\",\"middleName\":\"\"},\"address\":{\"addressLine1\":\"\",\"addressLine2\":\"\",\"addressLine3\":\"\",\"cityName\":\"\",\"stateProvinceCode\":\"\",\"countryCode\":\"\",\"postalCode\":\"\",\"attentionOfName\":\"\"},\"phoneNumber1\":\"\",\"phoneNumber2\":\"\",\"emailAddressCommunication\":\"\"},\"shippingMode\":{\"carrierServiceLevelName\":\"\",\"carrierID\":\"\",\"serviceLevelCode\":\"\"},\"vas\":{\"code\":\"\",\"description\":\"\"},\"giftLineInd\":\"\",\"gift\":{\"wrapUnitPriceAmount\":\"\",\"wrapSalesTaxAmount\":\"\"}}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="Order_details_in" format="json">
+      <types:shape format="weave" example="examples/Order_details_in-1.txt"><![CDATA[%dw 2.0
+
+type Order_details_in = {|
+  "_v": String, 
+  "_type": String, 
+  "_resource_state": String, 
+  adjusted_merchandize_total_tax: Number {"typeId": "double"}, 
+  adjusted_shipping_total_tax: Number {"typeId": "double"}, 
+  billing_address: {|
+    "_type": String, 
+    address1: String, 
+    city: String, 
+    country_code: String, 
+    first_name: String, 
+    full_name: String, 
+    id: String, 
+    last_name: String, 
+    phone: String, 
+    postal_code: String, 
+    state_code: String
+  |}, 
+  confirmation_status: String, 
+  created_by: String, 
+  creation_date: String, 
+  currency: String, 
+  customer_info: {|
+    "_type": String, 
+    customer_id: String, 
+    customer_name: String, 
+    email: String
+  |}, 
+  customer_name: String, 
+  export_status: String, 
+  last_modified: String, 
+  merchandize_total_tax: Number {"typeId": "double"}, 
+  notes: {|
+    "_type": String, 
+    link: String
+  |}, 
+  order_no: String, 
+  order_token: String, 
+  order_total: Number {"typeId": "double"}, 
+  payment_instruments: Array<{|    "_type": String,     amount: Number {"typeId": "double"},     payment_card: {|      "_type": String,       card_type: String,       credit_card_expired: Boolean,       credit_card_token: String,       expiration_month: Number {"typeId": "int"},       expiration_year: Number {"typeId": "int"},       holder: String,       masked_number: String,       number_last_digits: String    |},     payment_instrument_id: String,     payment_method_id: String  |}>, 
+  payment_status: String, 
+  product_items: Array<{|    "_type": String,     adjusted_tax: Number {"typeId": "int"},     base_price: Number {"typeId": "double"},     bonus_product_line_item: Boolean,     gift: Boolean,     item_id: String,     item_text: String,     price: Number {"typeId": "double"},     price_adjustments: Array<{|      "_type": String,       applied_discount: {|        "_type": String,         amount: Number {"typeId": "double"},         percentage: Number {"typeId": "int"},         "type": String      |},       creation_date: String,       custom: Boolean,       item_text: String,       last_modified: String,       manual: Boolean,       price: Number {"typeId": "int"},       price_adjustment_id: String,       promotion_id: String,       promotion_link: String    |}>, 
+    price_after_item_discount: Number {"typeId": "double"}, 
+    price_after_order_discount: Number {"typeId": "double"}, 
+    product_id: String, 
+    product_name: String, 
+    quantity: Number {"typeId": "int"}, 
+    shipment_id: String, 
+    tax: Number {"typeId": "int"}, 
+    tax_basis: Number {"typeId": "double"}, 
+    tax_class_id: String, 
+    tax_rate: Number {"typeId": "double"}, 
+    option_items: Array<{|      "_type": String,       adjusted_tax: Number {"typeId": "int"},       base_price: Number {"typeId": "int"},       bonus_product_line_item: Boolean,       gift: Boolean,       item_id: String,       item_text: String,       option_id: String,       option_value_id: String,       price: Number {"typeId": "int"},       price_after_item_discount: Number {"typeId": "int"},       price_after_order_discount: Number {"typeId": "int"},       product_id: String,       product_name: String,       quantity: Number {"typeId": "int"},       shipment_id: String,       tax: Number {"typeId": "int"},       tax_basis: Number {"typeId": "int"},       tax_class_id: String,       tax_rate: Number {"typeId": "double"}    |}>, 
+    shipping_item_id: String
+  |}>, 
+  product_sub_total: Number {"typeId": "double"}, 
+  product_total: Number {"typeId": "double"}, 
+  shipments: Array<{|    "_type": String,     adjusted_merchandize_total_tax: Number {"typeId": "double"},     adjusted_shipping_total_tax: Number {"typeId": "double"},     gift: Boolean,     merchandize_total_tax: Number {"typeId": "double"},     product_sub_total: Number {"typeId": "double"},     product_total: Number {"typeId": "double"},     shipment_id: String,     shipment_no: String,     shipment_total: Number {"typeId": "double"},     shipping_address: {|      "_type": String,       address1: String,       city: String,       country_code: String,       first_name: String,       full_name: String,       id: String,       last_name: String,       phone: String,       postal_code: String,       state_code: String    |},     shipping_method: {|      "_type": String,       description: String,       id: String,       name: String,       price: Number {"typeId": "double"},       c_estimatedArrivalTime: String    |},     shipping_status: String,     shipping_total: Number {"typeId": "double"},     shipping_total_tax: Number {"typeId": "double"},     tax_total: Number {"typeId": "double"}  |}>, 
+  shipping_items: Array<{|    "_type": String,     adjusted_tax: Number {"typeId": "double"},     base_price: Number {"typeId": "int"},     item_id: String,     item_text: String,     price: Number {"typeId": "int"},     price_after_item_discount: Number {"typeId": "int"},     shipment_id: String,     tax: Number {"typeId": "double"},     tax_basis: Number {"typeId": "int"},     tax_class_id: String,     tax_rate: Number {"typeId": "double"}  |}>, 
+  shipping_status: String, 
+  shipping_total: Number {"typeId": "double"}, 
+  shipping_total_tax: Number {"typeId": "double"}, 
+  site_id: String, 
+  status: String, 
+  taxation: String, 
+  tax_total: Number {"typeId": "double"}
+|} {"example": "{\"_v\":\"19.10\",\"_type\":\"order\",\"_resource_state\":\"aa3133b65a9c6005f90ac0a934be1d68a758ca98ace2b117689c10281874ef35\",\"adjusted_merchandize_total_tax\":148.5,\"adjusted_shipping_total_tax\":2.05,\"billing_address\":{\"_type\":\"order_address\",\"address1\":\"4775 Ogeechee Dr\",\"city\":\"Johns Creek\",\"country_code\":\"US\",\"first_name\":\"Brian\",\"full_name\":\"Brian Tarbell\",\"id\":\"c234b180e9c0c854e05d32c67c\",\"last_name\":\"Tarbell\",\"phone\":\"6789138536\",\"postal_code\":\"30022\",\"state_code\":\"GA\"},\"confirmation_status\":\"confirmed\",\"created_by\":\"Customer\",\"creation_date\":\"2019-10-18T16:23:44.000Z\",\"currency\":\"USD\",\"customer_info\":{\"_type\":\"customer_info\",\"customer_id\":\"abmI1YUPl2kXvnEzZ16CPNgpGu\",\"customer_name\":\"Brian Tarbell\",\"email\":\"brian.tarbell@wipro.com\"},\"customer_name\":\"Brian Tarbell\",\"export_status\":\"ready\",\"last_modified\":\"2019-10-25T20:11:22.000Z\",\"merchandize_total_tax\":157.5,\"notes\":{\"_type\":\"simple_link\",\"link\":\"https:\/\/dev01-na01-kontoor.demandware.net\/s\/RefArch\/dw\/shop\/v19_10\/orders\/00000101\/notes?client_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"},\"order_no\":\"00000101\",\"order_token\":\"QfAHYvUBtm0AGEkqkc4zcuu0OcYAtQnv0xqGBaxECAE\",\"order_total\":3161.5,\"payment_instruments\":[{\"_type\":\"order_payment_instrument\",\"amount\":3161.5,\"payment_card\":{\"_type\":\"payment_card\",\"card_type\":\"Visa\",\"credit_card_expired\":false,\"credit_card_token\":\"atx51nnputt\",\"expiration_month\":1,\"expiration_year\":2021,\"holder\":\"Brian Tarbell\",\"masked_number\":\"************1111\",\"number_last_digits\":\"1111\"},\"payment_instrument_id\":\"3320cbdb22fb9c4a3956d53315\",\"payment_method_id\":\"CREDIT_CARD\"}],\"payment_status\":\"not_paid\",\"product_items\":[{\"_type\":\"product_item\",\"adjusted_tax\":36,\"base_price\":299.99,\"bonus_product_line_item\":false,\"gift\":false,\"item_id\":\"3c9801bef24dffc978f296eaa5\",\"item_text\":\"Charcoal Flat Front Athletic Fit Shadow Striped Wool Suit\",\"price\":899.97,\"price_adjustments\":[{\"_type\":\"price_adjustment\",\"applied_discount\":{\"_type\":\"discount\",\"amount\":0.2,\"percentage\":20,\"type\":\"percentage\"},\"creation_date\":\"2019-10-18T16:23:44.000Z\",\"custom\":false,\"item_text\":\"PromotionTest_WithoutQualifying\",\"last_modified\":\"2019-10-18T16:23:44.000Z\",\"manual\":false,\"price\":-180,\"price_adjustment_id\":\"33cf0a700d6ac9843a2890b234\",\"promotion_id\":\"PromotionTest_WithoutQualifying\",\"promotion_link\":\"https:\/\/dev01-na01-kontoor.demandware.net\/s\/RefArch\/dw\/shop\/v19_10\/promotions\/PromotionTest_WithoutQualifying?client_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"price_after_item_discount\":719.97,\"price_after_order_discount\":719.97,\"product_id\":\"640188017003M\",\"product_name\":\"Charcoal Flat Front Athletic Fit Shadow Striped Wool Suit\",\"quantity\":3,\"shipment_id\":\"me\",\"tax\":45,\"tax_basis\":899.97,\"tax_class_id\":\"standard\",\"tax_rate\":0.05},{\"_type\":\"product_item\",\"adjusted_tax\":112.5,\"base_price\":2249.99,\"bonus_product_line_item\":false,\"gift\":false,\"item_id\":\"b4f2eebadd8273b6a0457ed75b\",\"item_text\":\"Mitsubishi 735 Series 73\\\" DLP\u00AE High Definition Television\",\"option_items\":[{\"_type\":\"option_item\",\"adjusted_tax\":0,\"base_price\":0,\"bonus_product_line_item\":false,\"gift\":false,\"item_id\":\"58262108e8e9e617cff9a5365b\",\"item_text\":\"Extended Warranty: None\",\"option_id\":\"tvWarranty\",\"option_value_id\":\"000\",\"price\":0,\"price_after_item_discount\":0,\"price_after_order_discount\":0,\"product_id\":\"000\",\"product_name\":\"Extended Warranty: None\",\"quantity\":1,\"shipment_id\":\"me\",\"tax\":0,\"tax_basis\":0,\"tax_class_id\":\"standard\",\"tax_rate\":0.05}],\"price\":2249.99,\"price_after_item_discount\":2249.99,\"price_after_order_discount\":2249.99,\"product_id\":\"mitsubishi-wd-73736M\",\"product_name\":\"Mitsubishi 735 Series 73\\\" DLP\u00AE High Definition Television\",\"quantity\":1,\"shipment_id\":\"me\",\"shipping_item_id\":\"74a65814f61ced72683d625e6b\",\"tax\":112.5,\"tax_basis\":2249.99,\"tax_class_id\":\"standard\",\"tax_rate\":0.05}],\"product_sub_total\":2969.96,\"product_total\":2969.96,\"shipments\":[{\"_type\":\"shipment\",\"adjusted_merchandize_total_tax\":148.5,\"adjusted_shipping_total_tax\":2.05,\"gift\":false,\"merchandize_total_tax\":157.5,\"product_sub_total\":2969.96,\"product_total\":2969.96,\"shipment_id\":\"me\",\"shipment_no\":\"00000501\",\"shipment_total\":3161.5,\"shipping_address\":{\"_type\":\"order_address\",\"address1\":\"4775 Ogeechee Dr\",\"city\":\"Johns Creek\",\"country_code\":\"US\",\"first_name\":\"Brian\",\"full_name\":\"Brian Tarbell\",\"id\":\"4c24331bf4ab89f5461d5be3f0\",\"last_name\":\"Tarbell\",\"phone\":\"6789138536\",\"postal_code\":\"30022\",\"state_code\":\"GA\"},\"shipping_method\":{\"_type\":\"shipping_method\",\"description\":\"Order received within 7-10 business days\",\"id\":\"001\",\"name\":\"Ground\",\"price\":15.99,\"c_estimatedArrivalTime\":\"7-10 Business Days\"},\"shipping_status\":\"not_shipped\",\"shipping_total\":40.99,\"shipping_total_tax\":2.05,\"tax_total\":150.55}],\"shipping_items\":[{\"_type\":\"shipping_item\",\"adjusted_tax\":1.25,\"base_price\":25,\"item_id\":\"74a65814f61ced72683d625e6b\",\"item_text\":\"Item Shipping Cost (Surcharge)\",\"price\":25,\"price_after_item_discount\":25,\"shipment_id\":\"me\",\"tax\":1.25,\"tax_basis\":25,\"tax_class_id\":\"standard\",\"tax_rate\":0.05},{\"_type\":\"shipping_item\",\"adjusted_tax\":0.8,\"base_price\":15.99,\"item_id\":\"ea272a819298a4fa2cc2df906b\",\"item_text\":\"Shipping\",\"price\":15.99,\"price_after_item_discount\":15.99,\"shipment_id\":\"me\",\"tax\":0.8,\"tax_basis\":15.99,\"tax_class_id\":\"standard\",\"tax_rate\":0.05}],\"shipping_status\":\"not_shipped\",\"shipping_total\":40.99,\"shipping_total_tax\":2.05,\"site_id\":\"RefArch\",\"status\":\"open\",\"taxation\":\"net\",\"tax_total\":150.55}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#db03b63d-2d85-4935-9f23-143572cc74d8">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Order_details_in"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Order_detials_cann"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#90e39331-ee5b-4f4b-baaf-b4b5c038bb42"/>
+  <types:enrichment select="#fee881d1-9acf-450c-a556-aa2926f1c0fa"/>
+  <types:enrichment select="#f708fcc2-74fb-4f9b-8aed-2427a2f22a81"/>
+</types:mule>
