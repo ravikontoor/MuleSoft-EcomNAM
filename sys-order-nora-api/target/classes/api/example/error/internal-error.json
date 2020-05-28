@@ -1,0 +1,5 @@
+{
+   "error_code": 500,
+   "name": "INTERNAL_TIMEOUT",
+   "message": "Internal Server error due to timeout/Request took too long to process/The status of the transaction is unknown. Please try again later."
+}
