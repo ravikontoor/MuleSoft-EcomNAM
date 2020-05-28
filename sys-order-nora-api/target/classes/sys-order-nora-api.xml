@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+    <apikit:config name="order-api-config" api="order-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus">
+	</apikit:config>
+  <configuration doc:name="Configuration" doc:id="057f3396-e8a5-45b7-9c09-e33f379ff8cc" defaultErrorHandler-ref="globalError_Handler" />
+	 	<configuration-properties doc:name="Configuration properties" doc:id="74bef6a4-cd02-417d-bdec-c9da8e59196f" file="config/api-${env}-config.yaml" />
+<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f843040c-26fa-4dc9-baaf-b536e7658052">
+		<http:listener-connection host="${ws.http_config.host}" port="${ws.http_config.port}"/>
+	</http:listener-config>
+		<http:request-config name="HTTP_config_Get_Access_Token" doc:name="HTTP Request configuration" doc:id="16bf9f4b-1b93-47f9-8507-6647bd507e99" basePath="#[vars.propValues.Values.basepath2]" >
+		<http:request-connection protocol="HTTPS" host="#[vars.propValues.Values.host]" port="#[vars.propValues.Values.port]" >
+			<reconnection >
+				<reconnect />
+			</reconnection>
+			<http:authentication >
+				<http:basic-authentication username="#[vars.propValues.Values.username]" password="${ws.password}" />
+			</http:authentication>
+		</http:request-connection>
+		<http:default-headers >
+			<http:default-header key="Content-Type" value="application/x-www-form-urlencoded" />
+		</http:default-headers>
+		<http:default-query-params >
+			<http:query-param key="client_id" value="#[vars.propValues.Values.clientid]" />
+			<http:query-param key="grant_type" value="#[vars.propValues.Values.granttype]" />
+		</http:default-query-params>
+	</http:request-config>	
+	<http:request-config name="HTTP_config_SFCC" doc:name="HTTP Request configuration" doc:id="7b41a600-87f9-4109-9697-16969e632b5d" basePath="#[vars.propValues.Values.basepath]">
+		<http:request-connection protocol="HTTPS" host="#[vars.propValues.Values.host]" port="#[vars.propValues.Values.port]"/>
+		<http:default-headers >
+			<http:default-header key="Content-Type" value="application/json" />
+		</http:default-headers>
+		<http:default-query-params >
+			<http:query-param key="client_id" value="#[vars.propValues.Values.clientid]" />
+		</http:default-query-params>		
+</http:request-config>
+<http:request-config name="HTTP_config_Bearer_Token" doc:name="HTTP Request configuration" doc:id="48f94cdd-39b1-4c24-a0ce-a17f03c24e93" basePath="${ws.bearertoken.basepath}" >
+		<http:request-connection protocol="HTTPS" host="${ws.bearertoken.host}" port="${ws.bearertoken.port}" >
+			<http:authentication >
+				<http:basic-authentication username="${ws.bearertoken.clientid}" password="${ws.bearertoken.password}" />
+			</http:authentication>
+		</http:request-connection>
+		<http:default-headers >
+			<http:default-header key="Content-Type" value="application/x-www-form-urlencoded" />
+		</http:default-headers>
+		<http:default-query-params >
+			<http:query-param key="grant_type" value="${ws.bearertoken.granttype}" />
+		</http:default-query-params>
+	</http:request-config>	
+	<flow name="order-api-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<set-variable value='#[%dw 2.0
+import * from dw::core::Strings
+output application/json skipNullOn="everywhere"
+---
+
+params:
+
+{
+	"site": attributes.queryParams.site,
+	 "orderID":substringAfter(attributes.maskedRequestPath,"/"),
+	 "env": attributes.queryParams.env,
+	 "localeID": if(attributes.queryParams.locale != null) attributes.queryParams.locale else "default"
+}]' doc:name="Set Variable" doc:id="9ca8227f-16fc-40fb-a940-56a59125c911" variableName="siteVar"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9785795e-8cfc-424c-9e20-a809f88bdea3" message="var parameters set ---- #[vars.siteVar]"/>
+		<ee:transform doc:name="SetPropertyKey" doc:id="fee881d1-9acf-450c-a556-aa2926f1c0fa" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="propKeys" ><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+
+Keys:
+
+{
+	 "host": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".host",
+	 "port":  "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".port",
+	 "basepath": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".basepath",
+     "clientid": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".clientid",
+	 "basepath2": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".basepath2",
+	 "username": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".username",
+	 "granttype": "ws." ++ vars.siteVar.params.env ++ ".dmandware" ++ ".granttype"
+	 
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="35f25743-a502-49a5-ad2e-bd0210ac7439" message="check PropKeys  #[vars.propKeys]"/>
+		<ee:transform doc:name="readProperties" doc:id="f708fcc2-74fb-4f9b-8aed-2427a2f22a81" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="propValues" ><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+
+Values:
+
+{
+	 "host": p(vars.propKeys.Keys.host),
+	 "port":  p(vars.propKeys.Keys.port),
+	 "basepath": p(vars.propKeys.Keys.basepath),
+     "clientid": p(vars.propKeys.Keys.clientid),
+	 "basepath2": p(vars.propKeys.Keys.basepath2),
+	 "username": p(vars.propKeys.Keys.username),
+	 "granttype": p(vars.propKeys.Keys.granttype)
+	 
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b674cd80-d833-448c-9051-9da6bc87800c" message="check propvalues #[vars.propValues]"/>
+		<apikit:router config-ref="order-api-config" />
+    </flow>
+    <flow name="order-api-console">
+        <http:listener path="console/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<apikit:console config-ref="order-api-config" />
+		<error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\OrderAcknowledgement:application\json:order-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="6ea196f5-72f0-4e64-91dc-3fd4426f5b0d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  code: 200,
+  name: "OK",
+  message: "The request has been completed successfully."
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="d7a271b9-a000-4d53-8c21-25983aa3baa9">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="sfccOrdUpdVar"><![CDATA[%dw 2.0
+output application/json	
+---
+[if(vars.orderUpdateVar.Order.region == "EU")
+
+
+  {
+  
+   status : vars.orderUpdateVar.Order.state,
+   confirmation_status: vars.orderUpdateVar.Order.external_order_status,
+   shipping_status: vars.orderUpdateVar.Order.shipmentStatus,
+   modified : now()
+  
+   }
+
+else false
+
+
+]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+    </flow>
+    <flow name="put:\(orderId):application\json:order-api-config">
+		<flow-ref doc:name="GetAccessToken" doc:id="23c7a3e6-8d0d-4265-baff-d93deda2cf47" name="access-token-settings-subflow" />
+		<http:request method="PATCH" doc:name="OrderUpdate" doc:id="55ccf505-905f-4aa8-abb7-373d0dcbbe83" config-ref="HTTP_config_SFCC" path="/{site}/dw/shop/v19_10/orders/{id}" responseTimeout="10000">
+					<reconnect frequency="1000" count="3"/>
+					<http:headers><![CDATA[#[output application/java
+---
+{
+	Authorization : vars.HeaderVar
+}]]]></http:headers>
+					<http:uri-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	id : vars.siteVar.params.orderID
+}]]]></http:uri-params>
+				</http:request>
+		<!--<logger level="INFO" message="#['Status for Order :' ++ payload.order_no  ++ ' is ' ++ payload.status]" />
+   --> </flow>
+	<flow name="get:\(orderId):order-api-config" doc:id="9f4e8c52-eeb9-4c69-903a-4ce1ea959d3b">
+		<flow-ref doc:name="GetAccessToken" doc:id="df008cde-197d-4ef9-b5b6-85a6f8b97172" name="access-token-settings-subflow" />
+		<http:request method="GET" doc:name="GetOrderDetails" doc:id="191908d1-127a-4abc-bf3f-d74f9eff1152" config-ref="HTTP_config_SFCC" path="/{site}/dw/shop/v19_10/orders/{id}" responseTimeout="10000">
+			<reconnect frequency="1000" count="3"/>
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	Authorization : vars.HeaderVar
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	id : vars.siteVar.params.orderID,
+	site: vars.siteVar.params.site
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="64f8335c-8102-4ffe-a482-4aafbb058311">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json skipNullOn = "everywhere"
+
+---
+{
+	Order: {
+		clientID: payload.customer_info.customer_no,
+		company_code: '',
+		country_Code: payload.billing_address.country_code,
+		brandID : if(payload.site_id == 'Lee') ('LE') else ('WR'),
+		creationDateTime: payload.creation_date,
+		changeDateTime: payload.last_modified,
+		alternateOrderID: payload.order_no,
+		customerOrderID: payload.order_no,
+		giftOrderInd: if (payload.shipments.gift == true) ("Y") else ("N"),
+		Orderamount: payload.order_total,
+		currencyCode: payload.currency,
+		OrderItemamount: payload.product_sub_total,
+		discountAmount: payload.adjusted_merchandize_total_tax,
+		OrdersalesTaxAmount: payload.tax_total,
+		OrderTax: payload.merchandize_total_tax,
+		returnDetails: if(payload.c_orderAmountReturned != null) payload.c_orderAmountReturned else null,
+		orderReturnInitiatedDetails: if(payload.c_orderReturnInitiatedDetails != null) payload.c_orderReturnInitiatedDetails else null,
+		ReturnAcknowledge : if(payload.c_ReturnAcknowledge != null) payload.c_ReturnAcknowledge else null,
+		collectionPointIdentifier: if(payload.c_collectionPointIdentifier != null) payload.c_collectionPointIdentifier else null,
+		orderLocaleID: if(payload.c_orderLocaleID != null) payload.c_orderLocaleID else null,
+		invoiceNumber: if(payload.c_invoiceNumber != null ) payload.c_invoiceNumber else null,
+		invoiceDetails: if(payload.c_invoiceMulesoftdetails != null ) payload.c_invoiceMulesoftdetails else null,
+		customer_info: {
+			phone: payload.billing_address.phone,
+			email: payload.customer_info.email,
+			"customer_no": payload."customer_info"."customer_no",
+			"customer_name": payload."customer_info"."customer_name"
+		},
+		adjustments: {
+			adustmentAmount: payload.adjusted_merchandize_total_tax
+		},
+		shipping_adress: {
+			Shipmentamount: payload.shipments.shipping_total[0],
+			adr1: payload.shipments.shipping_address.address1[0],
+			adr2: if(payload.shipments.shipping_address.address2[0] != null) payload.shipments.shipping_address.address2[0] else "",
+			city: payload.shipments.shipping_address.city[0],
+			country: payload.shipments.shipping_address.country_code[0],
+			zip: payload.shipments.shipping_address.postal_code[0],
+			state_code: if(payload.shipments.shipping_address.state_code[0] != null) payload.shipments.shipping_address.state_code[0] else "",
+			ShipmemntsalesTaxAmount: if(payload.shipments.shipping_total_tax[0] != null) payload.shipments.shipping_total_tax[0] as Number else 0.0
+		},
+		paymentInfo: {
+			payMethodName: payload.payment_instruments.payment_card.card_type[0],
+			billingContact: {
+				Contactid: payload.customer_info.customer_no,
+				givenName: payload.billing_address.first_name,
+				familyName: payload.billing_address.last_name,
+				fullName: payload.billing_address.full_name,
+				email: payload.customer_info.email,
+				phone: payload.billing_address.phone,
+				address: {
+					addressLine1: payload.billing_address.address1,
+					addressLine2: if(payload.billing_address.address2 != null) payload.billing_address.address2 else "",
+					cityName: payload.billing_address.city,
+					stateProvinceCode: payload.billing_address.state_code,
+					postalCode: payload.billing_address.postal_code
+				}
+			},
+			payMethodCode: if(payload.payment_instruments.payment_card.card_type[0] == "Visa") ("Visa") else ("MC"),
+			payMethodType: if(payload.payment_instruments.payment_method_id[0] == "CREDIT_CARD") ("CC")else ("PP"),
+			requestedDeliveryDate: payload.customer_info."_type",
+			customerCancelDate: "",
+			paymentID: payload.payment_instruments.payment_instrument_id[0],
+			accountSuffix: payload.payment_instruments.payment_card.number_last_digits[0],
+            authorizationAmount: payload.c_Adyen_value,
+            authorizationCode: payload.c_Adyen_pspReference
+		},
+		orderLine: payload.product_items map ((items,i) ->{
+			lineID: items.item_id,
+			partNumber: items.product_id,
+			upcID: items.c_UPC,
+			requestedQuantity: items.quantity as String,
+			sellingAmount: items.price,
+			itemAfterPromotion: items.c_totalAfterPromotion,
+			unitpriceAfterProm: (items.price_after_order_discount / items.quantity),
+			unitpriceBefProm:  (items.price / items.quantity),
+			taxRate: items.tax_rate,
+			retailAmount: items.price_after_order_discount,
+			discountAmount: items.price - items.price_after_order_discount,
+			shippingamount: payload.shipping_items.price_after_item_discount[i],
+			shippingTaxAmount: payload.shipping_items.tax[i],
+			productName: items.product_name,
+			profitCenter: items.c_PRODUCT_PROFIT_CENTER,
+			taxCommodityCode: items.tax_class_id,
+            totalAfterPromotion: items.c_totalAfterPromotion,
+            refundAmount: if(items.c_totalRefundAmount != null) items.c_totalRefundAmount else 0,
+			totalAfterPromotion: items.c_totalAfterPromotion,
+			salesTaxAmount: items.tax,			
+			shippingContact: {
+				name: {
+					title: payload.shipments.shipping_address.full_name[0],
+					familyName: payload.shipments.shipping_address.last_name[0],
+					givenName: payload.shipments.shipping_address.first_name[0]
+				},
+				address: {
+					addressLine1: payload.shipments.shipping_address.address1[0],
+					cityName: payload.shipments.shipping_address.city[0],
+					stateProvinceCode: payload.shipments.shipping_address.state_code[0],
+					countryCode: payload.shipments.shipping_address.country_code[0],
+					postalCode: payload.shipments.shipping_address.postal_code[0]
+				},
+				phoneNumber1: payload.shipments.shipping_address.phone[0],
+				emailAddressCommunication: payload.customer_info.email[0]
+			},
+			shippingMode: {
+				carrierServiceLevelName: payload.shipments.shipping_method.name[0],
+				carrierID: payload.shipments.shipping_method.id[0],
+				serviceLevelCode: payload.shipments.shipping_method.c_shippingCarrier[0],
+				carrierCode: payload.shipments.shipping_method.name[0]
+			},
+			vas: {
+				code: payload.shipments.shipping_method.id[0],
+				description: payload.shipments.shipping_method.description[0]
+			},
+			giftLineInd: if(items.option_items.gift == true) ("Y") else ("N"),
+			adjCode: items.price_adjustments.item_text[0],
+			adjDescription: items.price_adjustments.item_text[0],
+			adjType: items.price_adjustments."_type"[0]
+		})
+	}
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get:\orders:order-api-config">
+		<flow-ref doc:name="GetBearerTokenFlowRef" doc:id="1173d1d8-20c8-427f-9276-4b8cd9ad23fa" name="bearer-token-settings-Sub_Flow" />
+		<flow-ref doc:name="GetAccessToken" doc:id="5eed7bd0-d11e-4df4-90f7-a52aa347e672" name="access-token-settings-subflow" />
+		<logger level="INFO" doc:name="Logger" doc:id="55f088da-c283-48f7-9519-56875b1f98ea" message="Check Param-------#[payload]" />
+		<http:request method="POST" doc:name="GetSFCCOrderIDs" doc:id="d4c56769-144e-40e0-9270-d1624f3f9006" config-ref="HTTP_config_SFCC" path="/{site}/dw/shop/v19_10/order_search" responseTimeout="5000">
+			<reconnect count="5"/>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : vars.headerData
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site
+}]]]></http:uri-params>				
+					
+		
+		
+		</http:request>
+		<choice doc:name="Choice" doc:id="d41f6a1c-eccb-4b32-a0f2-2b09c537f191" >
+			<when expression="#[payload.count &gt; 0]">
+				<ee:transform doc:name="Transform Message" doc:id="ab6b6296-c4b3-4fef-8f90-145b55cc03e7">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+Orders:	payload.hits.data map (orderId, index) ->
+	orderId.order_no
+	
+]]></ee:set-payload>
+
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		
+</ee:transform>
+				<foreach doc:name="For Each" doc:id="307ccd7f-e2fc-4e37-b397-1abad43ac4c7" collection="#[payload.Orders]">
+					<http:request method="PATCH" doc:name="Update order status as InProcess" doc:id="af536f6f-48c1-4ccd-814a-abee15f90049" config-ref="HTTP_config_SFCC" path="/{site}/dw/shop/v19_10/orders/{id}" target="RequestUpdateVar" responseTimeout="10000">
+						<reconnect count="3" frequency="1000"/>
+						<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"c_exportedToMulesoft" : "InProcess"
+	
+}]]]></http:body>
+						<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : vars.HeaderVar
+}]]]></http:headers>
+						<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	site : vars.siteVar.params.site,
+	id : payload
+}]]]></http:uri-params>
+					</http:request>
+				</foreach>
+				<set-variable value="#[%dw 2.0
+output application/java
+---
+[] as Array]" doc:name="Set Variable" doc:id="18173c2c-955e-4153-8a93-8c00edc11999" variableName="ordersList" />
+				<foreach doc:name="For Each" doc:id="67c8c741-52c6-4e78-9ecd-ae36fcfc65e5" collection="#[payload.Orders]">
+			<flow-ref doc:name="GetOrderDetails" doc:id="6fb0a336-880a-4f0c-bb25-6bdc5595649f" name="OrderIdFlow" targetValue="#[payload]" />
+			<set-variable value="#[%dw 2.0
+output application/json
+---
+flatten(vars.*ordersList ++ [payload])]" doc:name="Set Variable" doc:id="a75c5baa-c47e-4c66-9448-8525817f3d0c" variableName="ordersList" />
+		
+</foreach>
+				<set-payload value="#[%dw 2.0
+output application/json
+---
+vars.ordersList]" doc:name="Set Payload" doc:id="2b6a7716-49f8-46b9-ad51-702a2a71f2c1" />
+				<logger level="INFO" doc:name="Logger" doc:id="27fb64b9-d50c-47f3-98f4-30beaba44bf1" message="##Orders Batch Collected##" />
+			</when>
+			<otherwise >
+				<set-payload value='#[%dw 2.0
+output application/json
+---
+{
+	status: 200,
+	message: "No Orders Found"
+}]' doc:name="Set Payload" doc:id="fd0126c2-a96c-4187-ab2d-1ef537b18f6b" />
+				<logger level="INFO" doc:name="Logger" doc:id="fb159f07-1c3d-48df-aa06-d50bc52c6fef" message="payload ----#[payload]"/>
+			</otherwise>
+		</choice>
+    </flow>
+	<flow name="OrderIdFlow">
+		<try doc:name="Try" doc:id="be993631-5987-4f7d-8dfe-75168b87232c" >
+			<http:request method="GET" doc:name="GetOrderDetails" doc:id="5ebe2179-104f-48b9-a9ce-261b9eaf5f00" config-ref="HTTP_config_SFCC" path="/{site}/dw/shop/v19_10/orders/{id}" responseTimeout="10000">
+			<reconnect count="3" frequency="1000"/>
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	Authorization : vars.HeaderVar
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	id : payload,
+	site: vars.siteVar.params.site
+}]]]></http:uri-params>
+		</http:request>
+			<ee:transform doc:name="Transform Message" doc:id="db03b63d-2d85-4935-9f23-143572cc74d8">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json skipNullOn = "everywhere"
+
+---
+{
+	Order: {
+		clientID: payload.customer_info.customer_no,
+		company_code: '',
+		country_Code: payload.billing_address.country_code,
+		brandID : if(payload.site_id == 'Lee') ('LE') else ('WR'),
+		creationDateTime: payload.creation_date,
+		changeDateTime: payload.last_modified,
+		alternateOrderID: payload.order_no,
+		customerOrderID: payload.order_no,
+		giftOrderInd: if (payload.shipments.gift == true) ("Y") else ("N"),
+		Orderamount: payload.order_total,
+		currencyCode: payload.currency,
+		OrderItemamount: payload.product_sub_total,
+		discountAmount: payload.adjusted_merchandize_total_tax,
+		OrdersalesTaxAmount: payload.tax_total,
+		OrderTax: payload.merchandize_total_tax,
+		returnDetails: if(payload.c_orderAmountReturned != null) payload.c_orderAmountReturned else null,
+		orderReturnInitiatedDetails: if(payload.c_orderReturnInitiatedDetails != null) payload.c_orderReturnInitiatedDetails else null,
+		ReturnAcknowledge : if(payload.c_ReturnAcknowledge != null) payload.c_ReturnAcknowledge else null,
+		collectionPointIdentifier: if(payload.c_collectionPointIdentifier != null) payload.c_collectionPointIdentifier else null,
+		orderLocaleID: if(payload.c_orderLocaleID != null) payload.c_orderLocaleID else null,
+		invoiceNumber: if(payload.c_invoiceNumber != null ) payload.c_invoiceNumber else null,
+		invoiceDetails: if(payload.c_invoiceMulesoftdetails != null ) payload.c_invoiceMulesoftdetails else null,
+		customer_info: {
+			phone: payload.billing_address.phone,
+			email: payload.customer_info.email,
+			"customer_no": payload."customer_info"."customer_no",
+			"customer_name": payload."customer_info"."customer_name"
+		},
+		adjustments: {
+			adustmentAmount: payload.adjusted_merchandize_total_tax
+		},
+		shipping_adress: {
+			Shipmentamount: payload.shipments.shipping_total[0],
+			adr1: payload.shipments.shipping_address.address1[0],
+			adr2: if(payload.shipments.shipping_address.address2[0] != null) payload.shipments.shipping_address.address2[0] else "",
+			city: payload.shipments.shipping_address.city[0],
+			country: payload.shipments.shipping_address.country_code[0],
+			zip: payload.shipments.shipping_address.postal_code[0],
+			state_code: if(payload.shipments.shipping_address.state_code[0] != null) payload.shipments.shipping_address.state_code[0] else "",
+			ShipmemntsalesTaxAmount: if(payload.shipments.shipping_total_tax[0] != null) payload.shipments.shipping_total_tax[0] as Number else 0.0
+		},
+		paymentInfo: {
+			payMethodName: payload.payment_instruments.payment_card.card_type[0],
+			billingContact: {
+				Contactid: payload.customer_info.customer_no,
+				givenName: payload.billing_address.first_name,
+				familyName: payload.billing_address.last_name,
+				fullName: payload.billing_address.full_name,
+				email: payload.customer_info.email,
+				phone: payload.billing_address.phone,
+				address: {
+					addressLine1: payload.billing_address.address1,
+					addressLine2: if(payload.billing_address.address2 != null) payload.billing_address.address2 else "",
+					cityName: payload.billing_address.city,
+					stateProvinceCode: payload.billing_address.state_code,
+					postalCode: payload.billing_address.postal_code
+				}
+			},
+			payMethodCode: if(payload.payment_instruments.payment_card.card_type[0] == "Visa") ("Visa") else ("MC"),
+			payMethodType: if(payload.payment_instruments.payment_method_id[0] == "CREDIT_CARD") ("CC")else ("PP"),
+			requestedDeliveryDate: payload.customer_info."_type",
+			customerCancelDate: "",
+			paymentID: payload.payment_instruments.payment_instrument_id[0],
+			accountSuffix: payload.payment_instruments.payment_card.number_last_digits[0],
+            authorizationAmount: payload.c_Adyen_value,
+            authorizationCode: payload.c_Adyen_pspReference
+		},
+		orderLine: payload.product_items map ((items,i) ->{
+			lineID: items.item_id,
+			partNumber: items.product_id,
+			upcID: items.c_UPC,
+			requestedQuantity: items.quantity as String,
+			sellingAmount: items.price,
+			itemAfterPromotion: items.c_totalAfterPromotion,
+			unitpriceAfterProm: (items.price_after_order_discount / items.quantity),
+			unitpriceBefProm:  (items.price / items.quantity),
+			taxRate: items.tax_rate,
+			retailAmount: items.price_after_order_discount,
+			discountAmount: items.price - items.price_after_order_discount,
+			shippingamount: payload.shipping_items.price_after_item_discount[i],
+			shippingTaxAmount: payload.shipping_items.tax[i],
+			productName: items.product_name,
+			profitCenter: items.c_PRODUCT_PROFIT_CENTER,
+			taxCommodityCode: items.tax_class_id,
+            totalAfterPromotion: items.c_totalAfterPromotion,
+            refundAmount: if(items.c_totalRefundAmount != null) items.c_totalRefundAmount else 0,
+			totalAfterPromotion: items.c_totalAfterPromotion,
+			salesTaxAmount: items.tax,			
+			shippingContact: {
+				name: {
+					title: payload.shipments.shipping_address.full_name[0],
+					familyName: payload.shipments.shipping_address.last_name[0],
+					givenName: payload.shipments.shipping_address.first_name[0]
+				},
+				address: {
+					addressLine1: payload.shipments.shipping_address.address1[0],
+					cityName: payload.shipments.shipping_address.city[0],
+					stateProvinceCode: payload.shipments.shipping_address.state_code[0],
+					countryCode: payload.shipments.shipping_address.country_code[0],
+					postalCode: payload.shipments.shipping_address.postal_code[0]
+				},
+				phoneNumber1: payload.shipments.shipping_address.phone[0],
+				emailAddressCommunication: payload.customer_info.email[0]
+			},
+			shippingMode: {
+				carrierServiceLevelName: payload.shipments.shipping_method.name[0],
+				carrierID: payload.shipments.shipping_method.id[0],
+				serviceLevelCode: payload.shipments.shipping_method.c_shippingCarrier[0],
+				carrierCode: payload.shipments.shipping_method.name[0]
+			},
+			vas: {
+				code: payload.shipments.shipping_method.id[0],
+				description: payload.shipments.shipping_method.description[0]
+			},
+			giftLineInd: if(items.option_items.gift == true) ("Y") else ("N"),
+			adjCode: items.price_adjustments.item_text[0],
+			adjDescription: items.price_adjustments.item_text[0],
+			adjType: items.price_adjustments."_type"[0]
+		})
+	}
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2630cd7a-857c-468e-a9ab-6bb32b17934a" >
+					<logger level="INFO" doc:name="Logger" doc:id="d6e4e863-1e1a-409e-be90-59b15cbfd861" message="## Error occured and continuing the order procesing ##"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+    </flow>
+	<sub-flow name="access-token-settings-subflow" doc:id="29b83cbf-f685-46d6-880b-5210183d1708" >
+		<http:request method="POST" doc:name="Http_GetAccessToken" doc:id="865008d3-be6d-4035-8863-3264fabd16f7" config-ref="HTTP_config_Get_Access_Token" path="/oauth2/access_token" target="access" responseTimeout="10000">
+			<ee:repeatable-file-store-stream bufferUnit="MB" />
+			<reconnect count="3" frequency="1000"/>
+
+		</http:request>
+		<set-variable value="#[' ' ++ 'Bearer' ++ ' ' ++ vars.access.access_token]" doc:name="SetAccessToken" doc:id="4fafb479-3e5e-42bf-8aa2-3fce0863a555" variableName="HeaderVar"/>
+	</sub-flow>
+	<sub-flow name="bearer-token-settings-Sub_Flow" doc:id="1e49c67e-8638-41ca-8328-704632c0a8b8" >
+		<http:request method="POST" doc:name="Http_etBearerToken" doc:id="bc32a6ec-32ed-41f4-a84e-79d2e9d7f58f" config-ref="HTTP_config_Bearer_Token" path="/oauth2/access_token" target="bearer_token" responseTimeout="10000">
+			<reconnect count="3" frequency="1000"/>
+		</http:request>
+		<set-variable doc:name="SetBearerToken" doc:id="9bc275eb-5c40-40c5-a4d8-859f8e1c26bf" variableName="headerData" value="#[' ' ++ 'Bearer' ++ ' ' ++ vars.bearer_token.access_token]"/>
+	</sub-flow>
+</mule>
