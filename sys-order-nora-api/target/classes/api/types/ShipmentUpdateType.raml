@@ -1,0 +1,63 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  Order:
+    type: object
+    required: false    
+    properties:
+      region:
+        type: string
+        required: false          
+      expression:
+        type: string
+        required: false
+      orderId :
+       type: string
+       required: false
+      carrier_name:
+        type: string
+        required: false          
+      state :
+        type: string
+        required: false
+      external_order_status:
+          type: string
+          required: false
+      track: 
+        type: object
+        required: false
+        properties:
+          tracknumber:
+            type: string
+            required: false
+          lines:
+            type: object
+            required: false
+            properties:
+              itemID:
+                type: string
+                required: false
+              lineQty:
+                type: number
+                required: false           
+          shipmentStatus :
+            type: string
+            required: false
+          linesItems:
+            type: object
+            required: false
+            properties:
+             line:
+              type: object
+              properties:
+               TrackingNumber:
+                 type: string
+                 required: false
+               ItemID :
+                type: string
+                required: false
+               Qty:
+                type: number
+                required: false
+              
+          
