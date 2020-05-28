@@ -1,0 +1,5 @@
+{
+  "error_code": 401,
+  "name": "Unauthorized",
+  "message": "The request requires user authentication."
+}
