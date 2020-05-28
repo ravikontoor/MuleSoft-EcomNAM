@@ -1,0 +1,114 @@
+{
+  "Order": {
+    "clientID": "",
+    "company_code": "",
+    "country_Code": "",
+    "brandID": "",
+    "creationDateTime": "",
+    "changeDateTime": "",
+    "alternateOrderID": "",
+    "customerOrderID": "",
+    "giftOrderInd": "",
+    "Orderamount": 0,
+    "currencyCode": "",
+    "OrderItemamount": 0,
+    "discountAmount": 0,
+    "OrdersalesTaxAmount": 0,
+    "vas": {
+      "code": "",
+      "description": ""
+    },
+    "adjustments": {
+      "adustmentType": "",
+      "adustmentCode": "",
+      "adustmentescription": "",
+      "adustmentAmount": 0
+    },
+    "shipping_adress": {
+      "dropoffpoint_id": "",
+      "notification_type": "",
+      "booking_code": "",
+      "Shipmentamount": 0,
+      "adr1": "",
+      "city": "",
+      "country": "",
+      "zip": "",
+      "ShipmemntsalesTaxAmount": 0
+    },
+    "recipient": {
+      "carrier_code": "",
+      "delivery_rule": "",
+      "delivery_information": ""
+    },
+    "paymentInfo": {
+      "authorizationAmount": 0,
+      "payMethodName": "",
+      "authorizationCode": "",
+      "accountSuffix": "",
+      "billingContact": {
+        "Contactid": "",
+        "givenName": "",
+        "familyName": "",
+        "address": {
+          "addressLine1": "",
+          "addressLine2": "",
+          "cityName": "",
+          "stateProvinceCode": "",
+          "countryCode": "",
+          "postalCode": ""
+        }
+      },
+      "payMethodCode": "",
+      "payMethodType": "",
+      "requestedDeliveryDate": "",
+      "customerCancelDate": ""
+    },
+    "orderLine": {
+      "lineID": "",
+      "partNumber": "",
+      "upcID": "",
+      "requestedQuantity": "",
+      "retailAmount": 0,
+      "sellingAmount": 0,
+      "discountAmount": "",
+      "shippingamount": 0,
+      "salesTaxAmount": 0,
+      "shippingContact": {
+        "name": {
+          "nickName": "",
+          "title": "",
+          "familyName": "",
+          "givenName": "",
+          "middleName": ""
+        },
+        "address": {
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "cityName": "",
+          "stateProvinceCode": "",
+          "countryCode": "",
+          "postalCode": "",
+          "attentionOfName": ""
+        },
+        "phoneNumber1": "",
+        "phoneNumber2": "",
+        "emailAddressCommunication": ""
+      },
+      "shippingMode": {
+        "carrierServiceLevelName": "",
+        "carrierID": "",
+        "serviceLevelCode": ""
+      },
+      "vas": {
+        "code": "",
+        "description": ""
+      },
+      "giftLineInd": "",
+      "gift": {
+        "wrapUnitPriceAmount": "",
+        "wrapSalesTaxAmount": ""
+      }
+    }
+  }
+}
