@@ -1,0 +1,231 @@
+#%RAML 1.0 DataType
+type : object
+properties:
+  Order:
+    type: object
+    properties :
+          clientID: string                        
+          company_code : string
+          country_Code : string
+          brandID : string
+          creationDateTime : datetime
+          changeDateTime : datetime
+          alternateOrderID : 
+           required: false
+           type: string
+          customerOrderID :
+            required: false
+            type: string 
+          giftOrderInd : 
+            required: false
+            type: string
+          Orderamount : number
+          currencyCode : string
+          OrderItemamount: number
+          discountAmount : 
+            required: false
+            type: number
+          OrdersalesTaxAmount : number
+          vas:
+                    type: object
+                    required: false
+                    properties:
+                      code: 
+                        required: false
+                        type: string
+                      description: 
+                        required: false
+                        type: string
+          adjustments :
+                    type: object
+                    required: false
+                    properties:
+                      adustmentType : 
+                        required: false
+                        type: string
+                      adustmentCode : 
+                        required: false
+                        type: string
+                      adustmentescription : 
+                        required: false
+                        type: string
+                      adustmentAmount : 
+                        required: false
+                        type: number
+          shipping_adress: 
+                type: object
+                properties:
+                  dropoffpoint_id : 
+                    required: false
+                    type: string
+                  notification_type :
+                    required: false
+                    type: string
+                  booking_code :
+                    required: false
+                    type: string
+                  Shipmentamount : number
+                  adr1 : string
+                  city : string
+                  country : string
+                  zip : string
+                  ShipmemntsalesTaxAmount: 
+                    required: false
+                    type: number
+          recipient:
+                type: object
+                required: false
+                properties:
+                  carrier_code: 
+                   required: false
+                   type: string
+                  delivery_rule: 
+                   required: false
+                   type: string
+                  delivery_information : 
+                   required: false
+                   type: string
+          paymentInfo :
+                    type: object
+                    properties:
+                      authorizationAmount : number
+                      payMethodName : string
+                      authorizationCode : 
+                        required: false
+                        type: string
+                      accountSuffix : 
+                        required: false
+                        type: string
+                      billingContact :
+                        type: object
+                        properties:
+                          Contactid: string
+                          givenName: string
+                          familyName: string
+                          address:
+                            type: object
+                            properties:
+                              addressLine1 : string
+                              addressLine2 : 
+                                required: false
+                                type: string
+                              cityName : string
+                              stateProvinceCode : string
+                              countryCode : string
+                              postalCode : string
+                      payMethodCode: string
+                      payMethodType: string
+                      requestedDeliveryDate : 
+                       required: false
+                       type: datetime                         
+                      customerCancelDate :
+                        required: false
+                        type: datetime
+          orderLine:
+                type: object
+                properties:
+                  lineID : string
+                  partNumber : string
+                  upcID : string
+                  requestedQuantity: string
+                  retailAmount:
+                    required: false
+                    type: number                      
+                  sellingAmount :
+                    required: false
+                    type: number
+                  discountAmount:
+                    required: false
+                    type: number
+                  shippingamount : number
+                  salesTaxAmount: number
+                  shippingContact:
+                    type: object
+                    properties:
+                      name:
+                        type : object
+                        properties:
+                          nickName :
+                            required: false
+                            type: string  
+                          title :
+                           required: false
+                           type: string 
+                          familyName :
+                           required: false
+                           type: string
+                          givenName: string
+                          middleName:
+                            required: false
+                            type: string
+                      address:
+                        type: object
+                        properties:
+                          addressLine1 :
+                            required: false
+                            type: string
+                          addressLine2 :
+                            required: false
+                            type: string
+                          addressLine3:
+                            required: false
+                            type: string
+                          cityName:
+                            required: false
+                            type: string
+                          stateProvinceCode:
+                            required: false
+                            type: string
+                          countryCode:
+                            required: false
+                            type: string
+                          postalCode:
+                            required: false
+                            type: string
+                          attentionOfName:
+                            required: false
+                            type: string
+                      phoneNumber1:
+                        required: false
+                        type: string
+                      phoneNumber2:
+                        required: false
+                        type: string
+                      emailAddressCommunication:
+                        required: false
+                        type: string
+                  shippingMode:
+                    type: object
+                    properties:
+                      carrierServiceLevelName:
+                        required: false
+                        type: string
+                      carrierID:
+                        required: false
+                        type: string
+                      serviceLevelCode:
+                        required: false
+                        type: string
+                  vas:
+                    type: object
+                    required: false
+                    properties:
+                      code:
+                        required: false
+                        type: string                          
+                      description:
+                        required: false
+                        type: string
+                  giftLineInd:
+                    required: false
+                    type: string                      
+                  gift:
+                    type: object
+                    required: false
+                    properties:
+                      wrapUnitPriceAmount:
+                        required: false
+                        type: string
+                      wrapSalesTaxAmount:
+                        required: false
+                        type: string
