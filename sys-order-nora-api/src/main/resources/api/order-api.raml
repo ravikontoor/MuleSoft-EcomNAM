@@ -1,0 +1,94 @@
+#%RAML 1.0
+version: 1.9
+baseUri: https://order-api.cloudhub.io/order
+title: Order API
+mediaType: application/json
+ 
+resourceTypes:
+  getResource: !include exchange_modules/e0dddf6a-579b-4163-879f-a7e784fadd51/ResponseCodes_Get_Method/1.0.1/ResponseCodes_Get_Method.raml
+  putResource: !include exchange_modules/e0dddf6a-579b-4163-879f-a7e784fadd51/ResponseCodes_Put_Method/1.0.0/ResponseCodes_Put_Method.raml
+
+types:
+  OrderSubmit: !include types/OrderSubmitType.raml
+  OrderAck: !include types/OrderAckType.raml
+  ShipmentUpdates: !include types/ShipmentUpdateType.raml
+
+/orders:
+  type:
+    getResource
+  get:
+    displayName: Fetching Order IDs
+    description: Fetching new or updated orders from SFCC
+    
+    queryParameters:
+      site : 
+       type: string
+       required: true
+      env:
+       type: string
+       required: true   
+    
+    responses :
+      200:
+        body:
+          type : object
+          properties:
+            OrderIds : array
+      
+
+/{orderId}:
+  type:
+    getResource  
+  get:
+    displayName: Get Orders
+    description: get Order Details for OrderId
+    queryParameters:
+      site : 
+       type: string
+       required: true
+      env:
+       type: string
+       required: true 
+    responses:
+      200:
+        body: 
+          application/json:
+            type: object 
+
+  put:
+    displayName: Order Shipment Updates
+    description: Shipment Updates from Legacy to SFCC
+    queryParameters:
+      site : 
+       type: string
+       required: true
+      env:
+       type: string
+       required: true  
+      locale:
+       type: string
+       required: false
+    body:
+      application/json:
+        type: ShipmentUpdates
+    
+
+          
+               
+
+/OrderAcknowledgement:
+  type:
+    putResource:
+  put:
+     displayName: Order Acknowledgement
+     description: Order Ack from Legacy to SFCC
+     body:
+       application/json:
+         type: OrderAck
+           
+      
+                
+              
+                
+                
+                
